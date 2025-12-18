@@ -1,0 +1,49 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+@import "tailwindcss";
+
+:root {
+  --bg: #0a0a0a;
+  --surface: #0f0f0f;
+  --text: #ce8080;
+  --muted: #a3a3a3;
+  --accent: #fb923c;
+  --accent-hover: #ea580c;
+  --accent-text: #000000;
+  --bordercolor: #2b2b2b;
+
+  --overlay: rgba(0, 0, 0, 0.6);
+  --overlay-hover: rgba(0, 0, 0, 0.8);
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 30px rgba(251, 146, 60, 0.1);
+  
+  --font-main: "Roboto", sans-serif; 
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-main);
+}
+
+.container {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 0.375rem 0.75rem;
+  background: rgba(251, 146, 60, 0.1);
+  color: var(--accent);
+  border: 1px solid rgba(16, 223, 144, 0.2);
+  border-radius: 999px;
+  font-weight: 500;
+}
