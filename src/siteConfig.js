@@ -1,8 +1,10 @@
+import profilePic from "./pictures/ProfilePic.png";
+
 export const siteConfig = {
-  name: "Jane Doe",
-  role: "XR Developer",
+  name: "Marijn van Veggel",
+  role: "XR Software Developer",
   tagline: "Ik bouw interactieve XR-ervaringen die zich natuurlijk en intuïtief aanvoelen.",
-  aboutImage: "https://api.dicebear.com/7.x/notionists/png?seed=portfolio",
+  aboutImage: profilePic,
   cv: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
 
   socials: {

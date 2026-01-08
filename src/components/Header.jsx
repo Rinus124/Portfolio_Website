@@ -25,7 +25,7 @@ export default function Header() {
           onClick={scrollToTop}
           className="text-xl font-bold text-(--accent) hover:opacity-80 transition-opacity"
         >
-          Portfolio
+          Portfolio Marijn van Veggel
         </Link>
 
         {/* Navigatie links */}
