@@ -6,7 +6,7 @@ export default function Header() {
   //Helper functie om te checken of een link actief is
   const isActive = (path) => {
     if (path === "/") {
-      return location.pathname === "/" || location.pathname.startsWith("/projects");
+      return location.pathname === "/" || location.pathname.startsWith("/home");
     }
     return location.pathname.startsWith(path);
   };
@@ -39,7 +39,7 @@ export default function Header() {
                 : "text-(--muted) hover:text-(--text)"
             }`}
           >
-            Projects
+            Home
           </Link>
 
           <Link
@@ -64,6 +64,18 @@ export default function Header() {
             }`}
           >
             Contact
+          </Link>
+
+          <Link
+            to="/projects"
+            onClick={scrollToTop}
+            className={`transition-colors ${
+              isActive("/projects") 
+                ? "text-(--accent) font-semibold" 
+                : "text-(--muted) hover:text-(--text)"
+            }`}
+          >
+            Projecten
           </Link>
         </div>
       </nav>

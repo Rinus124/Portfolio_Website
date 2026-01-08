@@ -1,0 +1,177 @@
+{
+  "projects": [
+    {
+      "id": "asteroids-3d",
+      "title": "Asteroids 3D",
+      "tagline": "Een moderne 3D-remake van de arcade klassieker.",
+      "description": "Asteroids 3D is een moderne remake van de klassieke arcade game. Het doel was om physics-based movement te combineren met een minimalistische sci-fi stijl. Door veel playtesting vond ik de perfecte balans tussen thrust force, rotation speed en projectile velocity.\n\nTijdens het project focuste ik op iteratief werken en het snel ontwikkelen van speelbare prototypes. Daarbij heb ik veel geleerd over component-based architecture, het gebruik van ScriptableObjects voor game balancing en het implementeren van object pooling voor betere performance.",
+      "thumbnail": "https://picsum.photos/seed/asteroids/1200/600",
+      "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "screenshots": [
+        "https://picsum.photos/seed/a1/1200/800",
+        "https://picsum.photos/seed/a2/1200/800"
+      ],
+      "tags": [
+        "Unity",
+        "C#",
+        "3D",
+        "Physics"
+      ],
+      "projectRole": "Gameplay Programmer",
+      "timeline": "2 weken",
+      "mechanics": [
+        {
+          "subtitle": "Movement System",
+          "description": "De speler gebruikt thrust-based movement en smooth rotation, net als klassieke arcade shooters. In plaats van directe positie updates werkt alles met physics forces, wat zorgt voor natuurlijk momentum en inertia. Ook implementeerde ik screen-wrap waarbij je aan de ene kant verdwijnt en aan de andere kant verschijnt.",
+          "image": "https://picsum.photos/seed/e1/1200/800",
+          "code": "void Update()\n{\n    if (Input.GetKey(KeyCode.W))\n        rb.AddForce(transform.up * thrust);\n\n    float rotate = Input.GetAxis(\"Horizontal\");\n    rb.MoveRotation(rb.rotation - rotate * rotateSpeed * Time.deltaTime);\n}"
+        },
+        {
+          "subtitle": "Asteroid Spawner",
+          "description": "Asteroïden spawnen in willekeurige groottes, rotaties en snelheid om elke wave uniek te maken. Het spawning systeem gebruikt een sphere-based approach waarbij asteroids altijd buiten het zichtveld verschijnen. Grote asteroids splitsen in kleinere stukken wanneer ze geraakt worden, wat voor dynamische gameplay zorgt.",
+          "image": "https://picsum.photos/seed/e2/1200/800",
+          "code": "void SpawnAsteroid()\n{\n    Vector3 pos = Random.onUnitSphere * spawnRadius;\n    float size = Random.Range(0.5f, 2.5f);\n\n    GameObject ast = Instantiate(asteroidPrefab, pos, Random.rotation);\n    ast.transform.localScale = Vector3.one * size;\n\n    Rigidbody rb = ast.GetComponent<Rigidbody>();\n    rb.AddForce(Random.onUnitSphere * Random.Range(5,15), ForceMode.Impulse);\n}"
+        }
+      ]
+      ,
+      "git": "https://github.com/fvugt/asteroids-3d",
+      "itch": "https://fvugt.itch.io/asteroids-3d"
+    },
+    {
+      "id": "xr-escape-room",
+      "title": "XR Escape Room",
+      "tagline": "Een VR escape room met physics puzzels en interacties.",
+      "description": "Deze XR escape room is ontwikkeld met Unity's XR Interaction Toolkit en plaatst spelers in een mysterieuze kamer vol interactieve puzzels. Elke puzzel kan op meerdere manieren opgelost worden, wat spelers de vrijheid geeft om creatief te denken.\n\nIk wilde onderzoeken hoe je natuurlijke interacties kunt bouwen met VR controllers waarbij physics-based interactions zorgen voor maximale immersion.\n\nHet project richtte zich op drie kernpijlers: natuurlijke object manipulatie, physics-based puzzels en environmental storytelling waarbij de ruimte zelf het verhaal vertelt.",
+      "thumbnail": "https://picsum.photos/seed/xr/1200/600",
+      "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "screenshots": [
+        "https://picsum.photos/seed/xr1/1200/800",
+        "https://picsum.photos/seed/xr2/1200/800",
+        "https://picsum.photos/seed/xr3/1200/800"
+      ],
+      "tags": [
+        "Unity",
+        "C#",
+        "XR",
+        "VR"
+      ],
+      "projectRole": "XR Interaction Designer",
+      "timeline": "3 weken",
+      "mechanics": [
+        {
+          "subtitle": "Grab Interaction",
+          "description": "Objecten worden fysiek opgepakt door middel van XR Grab Interactables waarbij physics properties dynamisch worden aangepast. Voor kleine objecten gebruik ik precision grabs, terwijl grote objecten velocity-based grabs gebruiken die natuurlijker aanvoelen. De throw mechanic tracked controller velocity over meerdere frames voor realistische gooibewegingen.",
+          "image": "https://placehold.co/600x400?text=Grab",
+          "code": "public void OnSelectEntered(SelectEnterEventArgs args)\n{\n    grabbed = true;\n    rb.isKinematic = true;\n}\n\npublic void OnSelectExited(SelectExitEventArgs args)\n{\n    grabbed = false;\n    rb.isKinematic = false;\n}"
+        }
+      ]
+    },
+    {
+      "id": "topdown-shooter",
+      "title": "Topdown Shooter",
+      "tagline": "Een snelle twin-stick shooter met vijandige AI.",
+      "description": "Deze topdown shooter begon als een experiment om enemy AI te bouwen en groeide uit tot een complete arcade-style game. Het doel was om tight, responsive controls te combineren met challenging maar faire enemy behaviors.\n\nLater werd het uitgebreid met verschillende enemy types, wave progression systems en satisfying hit-feedback door screen shake en particle effects te combineren.\n\nHet project hielp mij de basis van AI state machines, navmesh pathfinding en difficulty balancing beter te leren begrijpen.",
+      "thumbnail": "https://picsum.photos/seed/shooter/1200/600",
+      "youtube": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "screenshots": [
+        "https://picsum.photos/seed/shooter1/1200/800",
+        "https://picsum.photos/seed/shooter2/1200/800"
+      ],
+      "tags": [
+        "Unity",
+        "C#",
+        "AI",
+        "Topdown"
+      ],
+      "projectRole": "Programmer",
+      "timeline": "1 week",
+      "mechanics": [
+        {
+          "subtitle": "Enemy AI State Machine",
+          "description": "Een finite state machine voor vijanden die dynamisch schakelt tussen Idle → Chase → Attack → Retreat states. In Chase gebruiken enemies navmesh pathfinding, in Attack positioneren ze zich tactisch, en in Retreat trekken ze zich terug naar cover bij lage health. Verschillende enemy types hebben eigen parameters voor aggression range en attack patterns.",
+          "image": "https://placehold.co/600x400?text=Enemy+AI",
+          "code": "void Update()\n{\n    switch(state)\n    {\n        case Idle:\n            LookForPlayer();\n            break;\n\n        case Chase:\n            MoveTowardPlayer();\n            break;\n\n        case Attack:\n            TryShoot();\n            break;\n    }\n}"
+        },
+        {
+          "subtitle": "Projectile System",
+          "description": "Hit-detection via raycasts met instant feedback - veel sneller en accurater dan physics-based projectiles. De raycast spawned een hit effect op het impact point en gebruikt layer masks om te bepalen wat geraakt kan worden. Elk schot krijgt een tracer effect die de bullet path visualiseert.",
+          "image": "https://placehold.co/600x400?text=Projectile",
+          "code": "void Shoot()\n{\n    Ray ray = new Ray(transform.position, transform.forward);\n\n    if (Physics.Raycast(ray, out var hit, 50f))\n    {\n        Debug.Log($\"Hit {hit.collider.name}\");\n    }\n}"
+        }
+      ]
+    },
+    {
+      "id": "vr-training-sim",
+      "title": "VR Training Simulator",
+      "tagline": "Een realistische VR-training voor industriële procedures.",
+      "description": "Deze VR training simulator is gebouwd voor het oefenen van complexe industriële procedures in een volledig veilige virtuele omgeving. Het doel was om een training te creëren die net zo effectief is als hands-on training, maar zonder de risico's en kosten.\n\nDe focus lag op realistische hand-tracking voor natuurlijke interacties, stapsgewijze instructies die gebruikers begeleiden en gedetailleerde feedback op gebruikersacties waarbij immediate feedback het leerproces versterkt.\n\nHet project leerde mij hoe je effectieve VR training ervaringen ontwerpt met verschillende difficulty modes en performance tracking om daadwerkelijk kennisoverdracht te bevorderen.",
+      "thumbnail": "https://picsum.photos/seed/vrtrain/1200/600",
+      "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "screenshots": [
+        "https://picsum.photos/seed/vrt1/1200/800",
+        "https://picsum.photos/seed/vrt2/1200/800",
+        "https://picsum.photos/seed/vrt3/1200/800"
+      ],
+      "tags": [
+        "Unity",
+        "VR",
+        "Hand Tracking",
+        "Training"
+      ],
+      "projectRole": "VR Developer",
+      "timeline": "4 weken",
+      "mechanics": [
+        {
+          "subtitle": "Step-by-Step Guide System",
+          "description": "Een dynamisch instructiesysteem dat de gebruiker door complexe multi-step procedures leidt met real-time visual guidance. Elke step heeft validation criteria die checken of de actie correct is uitgevoerd. In guided mode krijg je hints als je te lang stilstaat, terwijl advanced mode minimale assists heeft voor realistischere training.",
+          "image": "https://placehold.co/600x400?text=Guide+System",
+          "code": "public class StepGuide : MonoBehaviour\n{\n    public List<TrainingStep> steps;\n    private int currentStep = 0;\n\n    void CheckStepCompletion()\n    {\n        if (steps[currentStep].IsCompleted())\n        {\n            currentStep++;\n            ShowNextInstruction();\n        }\n    }\n}"
+        },
+        {
+          "subtitle": "Hand Tracking Validation",
+          "description": "Controleert of handposities en hand poses correct zijn voor specifieke acties door palm orientation en finger positions te valideren. Wanneer je grip incorrect is, verschijnt een ghost hand overlay die de correcte positie toont. Dit is veel effectiever dan tekstuele instructies omdat mensen de juiste pose kunnen imiteren.",
+          "image": "https://placehold.co/600x400?text=Hand+Tracking",
+          "code": "bool ValidateHandPose(HandPose required)\n{\n    float similarity = Vector3.Dot(\n        currentPose.palmNormal,\n        required.palmNormal\n    );\n\n    return similarity > 0.95f;\n}"
+        }
+      ],
+      "git": "https://github.com/fvugt/vr-training-sim",
+      "itch": ""
+    },
+    {
+      "id": "ar-museum-guide",
+      "title": "AR Museum Guide",
+      "tagline": "Een interactieve AR-applicatie voor museum bezoekers.",
+      "description": "De AR Museum Guide brengt museumtentoonstellingen tot leven door digitale content over fysieke objecten heen te projecteren en transformeert statische kunstwerken in interactieve verhalen. Een Romeins schilderij komt tot leven met animated characters, bij fossielen verschijnen 3D reconstructies.\n\nGebruikers kunnen hun telefoon op kunstwerken richten om extra informatie, 3D modellen en interactieve elementen te zien die historical context bieden op een engaging manier.\n\nDit project introduceerde mij in AR Foundation, image tracking en UI design voor augmented reality waarbij ik leerde werken met verschillende lighting conditions in musea.",
+      "thumbnail": "https://picsum.photos/seed/armuseum/1200/600",
+      "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "screenshots": [
+        "https://picsum.photos/seed/arm1/1200/800",
+        "https://picsum.photos/seed/arm2/1200/800"
+      ],
+      "tags": [
+        "Unity",
+        "AR Foundation",
+        "Mobile",
+        "Image Tracking"
+      ],
+      "projectRole": "AR Developer",
+      "timeline": "3 weken",
+      "mechanics": [
+        {
+          "subtitle": "Image Tracking System",
+          "description": "Herkent kunstwerken en plaatst AR content op de juiste posities door gebruik te maken van AR Foundation's image tracking. Wanneer een artwork gedetecteerd wordt, spawned het systeem de bijbehorende content - info panels, 3D modellen of video overlays. De content blijft stabiel geanchored zelfs als de camera beweegt.",
+          "image": "https://placehold.co/600x400?text=Image+Tracking",
+          "code": "void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs args)\n{\n    foreach (var trackedImage in args.added)\n    {\n        string artworkId = trackedImage.referenceImage.name;\n        SpawnARContent(artworkId, trackedImage.transform);\n    }\n}"
+        },
+        {
+          "subtitle": "Interactive 3D Models",
+          "description": "Gebruikers kunnen 3D modellen roteren en schalen met intuïtive touch gestures - single finger drag roteert, pinch zoom schaalt en two-finger drag verplaatst het model. Sommige modellen zijn animated en kunnen hun functie demonstreren. Custom shaders zorgen dat de modellen natuurlijk blenden met de real world door environment lighting.",
+          "image": "https://placehold.co/600x400?text=3D+Interaction",
+          "code": "void HandleTouchInput()\n{\n    if (Input.touchCount == 2)\n    {\n        Touch t1 = Input.GetTouch(0);\n        Touch t2 = Input.GetTouch(1);\n\n        float pinchDist = Vector2.Distance(t1.position, t2.position);\n        float scale = pinchDist / initialPinchDist;\n\n        model.localScale = initialScale * scale;\n    }\n}"
+        }
+      ],
+      "git": "",
+      "itch": "https://fvugt.itch.io/ar-museum"
+    }
+  ]
+}
