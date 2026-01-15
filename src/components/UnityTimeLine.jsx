@@ -4,7 +4,6 @@ import React, { useMemo, useRef, useState } from "react";
 const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 
 function shortestAngleLerp(a, b, t) {
-  // angles in radians, interpolate shortest path
   let diff = b - a;
   while (diff > Math.PI) diff -= Math.PI * 2;
   while (diff < -Math.PI) diff += Math.PI * 2;
@@ -22,7 +21,6 @@ function diamondPoints(cx, cy, r) {
   return `${cx} ${cy - r} ${cx + r} ${cy} ${cx} ${cy + r} ${cx - r} ${cy}`;
 }
 
-// Evaluate angle at time t from keyframes (linear)
 function evalKeys(keys, t) {
   if (!keys || keys.length === 0) return null;
   const sorted = [...keys].sort((a, b) => a.t - b.t);
@@ -60,15 +58,13 @@ export default function WorkingAnimationLine() {
   const headerH = 44;
   const rowH = 38;
 
+  // IMPORTANT: one ref for the ONE horizontal scroll container
   const timelineRef = useRef(null);
 
   const [time, setTime] = useState(0.0);
-  const [drag, setDrag] = useState(null);
-  // drag = {type:"playhead"} or {type:"key", trackId, keyId} or {type:"limb", limbId}
+  const [drag, setDrag] = useState(null); // {type:"playhead"} | {type:"key",trackId,keyId} | {type:"limb",limbId}
 
-  // Tracks: each track animates one limb rotation (angle radians)
   const [tracks, setTracks] = useState(() => [
-    // start with one track for demo
     {
       id: "armL",
       name: "Left Arm",
@@ -80,12 +76,9 @@ export default function WorkingAnimationLine() {
   ]);
 
   const trackIds = useMemo(() => new Set(tracks.map((t) => t.id)), [tracks]);
-
   const [selectedTrackId, setSelectedTrackId] = useState("armL");
   const [showAdd, setShowAdd] = useState(false);
 
-  // Current pose (editable by dragging)
-  // radians
   const [pose, setPose] = useState(() => ({
     armL: -0.6,
     armR: 0.6,
@@ -93,8 +86,6 @@ export default function WorkingAnimationLine() {
     legR: -0.25,
   }));
 
-  // When scrubbing time, we want pose to reflect animation (if track exists)
-  // We'll compute "animatedPose" from keys; but still allow manual editing on top.
   const animatedPose = useMemo(() => {
     const next = { ...pose };
     for (const tr of tracks) {
@@ -105,12 +96,11 @@ export default function WorkingAnimationLine() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [time, tracks]);
 
-  // Helper: update pose from limb drag
   function setLimbAngle(limbId, angle) {
     setPose((p) => ({ ...p, [limbId]: angle }));
   }
 
-  // Convert clientX to timeline local X (includes scroll)
+  // Convert clientX -> local timeline X (includes scrollLeft)
   function getLocalX(clientX) {
     const el = timelineRef.current;
     if (!el) return 0;
@@ -132,9 +122,13 @@ export default function WorkingAnimationLine() {
 
   function onPointerMoveTimeline(e) {
     if (!drag) return;
+
     if (drag.type === "playhead") {
       setPlayheadFromClientX(e.clientX);
-    } else if (drag.type === "key") {
+      return;
+    }
+
+    if (drag.type === "key") {
       const lx = getLocalX(e.clientX);
       const t = clamp(xToTime(lx, pxPerSec), 0, duration);
 
@@ -179,28 +173,32 @@ export default function WorkingAnimationLine() {
   }
 
   function addKeyframe(trackId) {
-    const currentAngle = pose[trackId]; // keyframe the edited pose
+    const currentAngle = pose[trackId];
     if (currentAngle == null) return;
 
     setTracks((prev) =>
       prev.map((tr) => {
         if (tr.id !== trackId) return tr;
         const existing = tr.keys.find((k) => Math.abs(k.t - time) < 1e-3);
+
         if (existing) {
-          // overwrite near same time
           return {
             ...tr,
-            keys: tr.keys.map((k) => (k.id === existing.id ? { ...k, v: currentAngle } : k)),
+            keys: tr.keys.map((k) =>
+              k.id === existing.id ? { ...k, v: currentAngle } : k
+            ),
           };
         }
+
         const id = `k${Math.random().toString(16).slice(2)}`;
-        const keys = [...tr.keys, { id, t: time, v: currentAngle }].sort((a, b) => a.t - b.t);
+        const keys = [...tr.keys, { id, t: time, v: currentAngle }].sort(
+          (a, b) => a.t - b.t
+        );
         return { ...tr, keys };
       })
     );
   }
 
-  // Keyframe shortcut: K
   function onKeyDown(e) {
     if (e.key.toLowerCase() === "k") {
       if (selectedTrackId) addKeyframe(selectedTrackId);
@@ -213,29 +211,28 @@ export default function WorkingAnimationLine() {
 
   const majorLines = useMemo(() => {
     const arr = [];
-    for (let t = 0; t <= duration + 1e-9; t += majorStep) arr.push(Number(t.toFixed(4)));
+    for (let t = 0; t <= duration + 1e-9; t += majorStep) {
+      arr.push(Number(t.toFixed(4)));
+    }
     return arr;
   }, [duration]);
 
   const minorLines = useMemo(() => {
     const arr = [];
-    for (let t = 0; t <= duration + 1e-9; t += minorStep) arr.push(Number(t.toFixed(4)));
+    for (let t = 0; t <= duration + 1e-9; t += minorStep) {
+      arr.push(Number(t.toFixed(4)));
+    }
     return arr;
   }, [duration]);
 
   const timelineW = Math.max(900, duration * pxPerSec + 120);
   const rows = tracks.length;
 
-  // --- Character layout (simple 2D rig) ---
-  // We draw it in a fixed coordinate system inside a box.
-  // Body center:
-  const charW = 300;
+  // Character layout
   const charH = 380;
-
   const torso = { x: 150, y: 150, w: 60, h: 90 };
   const head = { x: 150, y: 95, r: 24 };
 
-  // Pivots
   const pivots = {
     armL: { x: torso.x - torso.w / 2, y: torso.y - 25 },
     armR: { x: torso.x + torso.w / 2, y: torso.y - 25 },
@@ -253,12 +250,11 @@ export default function WorkingAnimationLine() {
   function limbEnd(limbId, angle) {
     const p = pivots[limbId];
     const L = limbLen[limbId];
-    // 0 rad points right; we want default down-ish, so angles set accordingly by pose
     return { x: p.x + Math.cos(angle) * L, y: p.y + Math.sin(angle) * L };
   }
 
-  // Dragging limbs: compute angle from pivot to pointer position inside character box
   const charRef = useRef(null);
+
   function clientToCharXY(clientX, clientY) {
     const el = charRef.current;
     if (!el) return { x: 0, y: 0 };
@@ -286,10 +282,7 @@ export default function WorkingAnimationLine() {
     if (drag?.type === "limb") setDrag(null);
   }
 
-  // Which pose to render? While scrubbing, use animatedPose,
-  // but if user is currently dragging a limb, show live pose (pose already updated).
   const renderPose = drag?.type === "limb" ? pose : animatedPose;
-
   const addableLimbs = ALL_LIMBS.filter((l) => !trackIds.has(l.id));
 
   return (
@@ -350,9 +343,13 @@ export default function WorkingAnimationLine() {
 
               {showAdd && (
                 <div className="absolute right-0 mt-2 w-44 rounded-xl border border-(--muted) bg-black/80 backdrop-blur p-2 z-20">
-                  <div className="text-[11px] text-(--muted) px-2 py-1">Add limb track</div>
+                  <div className="text-[11px] text-(--muted) px-2 py-1">
+                    Add limb track
+                  </div>
                   {addableLimbs.length === 0 && (
-                    <div className="text-xs text-(--muted) px-2 py-2">All limbs added</div>
+                    <div className="text-xs text-(--muted) px-2 py-2">
+                      All limbs added
+                    </div>
                   )}
                   {addableLimbs.map((l) => (
                     <button
@@ -399,140 +396,153 @@ export default function WorkingAnimationLine() {
           </div>
 
           <div className="px-3 pb-3 text-xs text-(--muted)">
-            Drag limbs → pose.  
-            Scrub timeline → playback.  
+            Drag limbs → pose. <br />
+            Scrub timeline → playback. <br />
             Press <span className="text-(--text)">K</span> to keyframe selected track.
           </div>
         </div>
 
-        {/* MIDDLE: Timeline */}
+        {/* MIDDLE: Timeline (ONE horizontal scroller) */}
         <div className="flex-1 min-w-0 border-r border-(--muted)">
-          {/* Ruler */}
-          <div className="relative border-b border-(--muted) bg-black/20" style={{ height: headerH }}>
-            <div
-              ref={timelineRef}
-              className="h-full overflow-x-auto overflow-y-hidden"
-              onPointerDown={onPointerDownTimeline}
-              onPointerMove={onPointerMoveTimeline}
-              onPointerUp={endDrag}
-              onPointerCancel={endDrag}
-              style={{ touchAction: "none" }}
-            >
-              <div className="relative" style={{ width: timelineW, height: headerH }}>
-                {majorLines.map((t) => {
-                  const x = timeToX(t, pxPerSec);
-                  return (
-                    <div
-                      key={`maj_${t}`}
-                      className="absolute top-0 h-full border-l border-white/15"
-                      style={{ left: x }}
-                    >
-                      <div className="absolute top-1 left-1 text-[10px] text-(--muted) tabular-nums">
-                        {t.toFixed(1)}s
-                      </div>
-                      <div className="absolute bottom-0 left-0 w-px h-3 bg-white/25" />
-                    </div>
-                  );
-                })}
-
-                {/* Playhead */}
-                <div
-                  className="absolute top-0 bottom-0 w-px bg-(--accent)"
-                  style={{ left: timeToX(time, pxPerSec) }}
-                >
-                  <div className="absolute -top-1 -translate-x-1/2 w-3 h-3 rotate-45 bg-(--accent)" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Tracks area */}
           <div
-            className="overflow-x-auto overflow-y-auto"
-            style={{ maxHeight: 420, touchAction: "none" }}
+            ref={timelineRef}
+            className="relative overflow-x-auto"
+            style={{ touchAction: "none" }}
+            onPointerDown={onPointerDownTimeline}
             onPointerMove={onPointerMoveTimeline}
             onPointerUp={endDrag}
             onPointerCancel={endDrag}
           >
-            <div className="relative" style={{ width: timelineW, height: rows * rowH }}>
-              {/* Grid */}
-              {minorLines.map((t) => {
-                const x = timeToX(t, pxPerSec);
-                const isMajor = Math.abs((t / majorStep) - Math.round(t / majorStep)) < 1e-6;
-                return (
+            <div className="relative" style={{ width: timelineW }}>
+              {/* Sticky ruler */}
+              <div
+                className="sticky top-0 z-20 border-b border-(--muted) bg-black/30"
+                style={{ height: headerH }}
+              >
+                <div className="relative" style={{ width: timelineW, height: headerH }}>
+                  {majorLines.map((t) => {
+                    const x = timeToX(t, pxPerSec);
+                    return (
+                      <div
+                        key={`maj_${t}`}
+                        className="absolute top-0 h-full border-l border-white/15"
+                        style={{ left: x }}
+                      >
+                        <div className="absolute top-1 left-1 text-[10px] text-(--muted) tabular-nums">
+                          {t.toFixed(1)}s
+                        </div>
+                        <div className="absolute bottom-0 left-0 w-px h-3 bg-white/25" />
+                      </div>
+                    );
+                  })}
+
+                  {/* Playhead in ruler */}
                   <div
-                    key={`grid_${t}`}
-                    className="absolute top-0 bottom-0"
-                    style={{
-                      left: x,
-                      width: 1,
-                      background: isMajor ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.06)",
-                    }}
+                    className="absolute top-0 bottom-0 w-px bg-(--accent)"
+                    style={{ left: timeToX(time, pxPerSec) }}
+                  >
+                    <div className="absolute -top-1 -translate-x-1/2 w-3 h-3 rotate-45 bg-(--accent)" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Vertical scroll area for rows (shares same horizontal scroll) */}
+              <div className="relative overflow-y-auto" style={{ maxHeight: 420 }}>
+                <div className="relative" style={{ width: timelineW, height: rows * rowH }}>
+                  {/* Grid */}
+                  {minorLines.map((t) => {
+                    const x = timeToX(t, pxPerSec);
+                    const isMajor =
+                      Math.abs(t / majorStep - Math.round(t / majorStep)) < 1e-6;
+
+                    return (
+                      <div
+                        key={`grid_${t}`}
+                        className="absolute top-0 bottom-0"
+                        style={{
+                          left: x,
+                          width: 1,
+                          background: isMajor
+                            ? "rgba(255,255,255,0.12)"
+                            : "rgba(255,255,255,0.06)",
+                        }}
+                        aria-hidden
+                      />
+                    );
+                  })}
+
+                  {tracks.map((tr, idx) => {
+                    const yTop = idx * rowH;
+                    const selected = tr.id === selectedTrackId;
+
+                    return (
+                      <div
+                        key={tr.id}
+                        className={[
+                          "absolute left-0 right-0",
+                          selected
+                            ? "bg-white/5"
+                            : idx % 2 === 0
+                            ? "bg-white/0"
+                            : "bg-white/[0.02]",
+                        ].join(" ")}
+                        style={{ top: yTop, height: rowH }}
+                      >
+                        <div className="absolute bottom-0 left-0 right-0 h-px bg-white/10" />
+
+                        <svg
+                          className="absolute inset-0"
+                          width="100%"
+                          height={rowH}
+                          viewBox={`0 0 ${timelineW} ${rowH}`}
+                        >
+                          {tr.keys.map((k) => {
+                            const x = timeToX(k.t, pxPerSec);
+                            const cy = rowH / 2;
+                            const r = 7;
+                            const isActive =
+                              drag?.type === "key" &&
+                              drag.trackId === tr.id &&
+                              drag.keyId === k.id;
+
+                            return (
+                              <g
+                                key={k.id}
+                                onPointerDown={(e) => onPointerDownKey(e, tr.id, k.id)}
+                                style={{ cursor: "grab" }}
+                              >
+                                <circle cx={x} cy={cy} r={16} fill="transparent" />
+                                <polygon
+                                  points={diamondPoints(x, cy, r)}
+                                  fill={
+                                    isActive || selected
+                                      ? "var(--accent)"
+                                      : "rgba(255,255,255,0.25)"
+                                  }
+                                  stroke="rgba(0,0,0,0.35)"
+                                  strokeWidth="1"
+                                />
+                              </g>
+                            );
+                          })}
+                        </svg>
+                      </div>
+                    );
+                  })}
+
+                  {/* Playhead across rows */}
+                  <div
+                    className="absolute top-0 bottom-0 w-px bg-(--accent)"
+                    style={{ left: timeToX(time, pxPerSec) }}
                     aria-hidden
                   />
-                );
-              })}
+                </div>
+              </div>
 
-              {tracks.map((tr, idx) => {
-                const yTop = idx * rowH;
-                const selected = tr.id === selectedTrackId;
-
-                return (
-                  <div
-                    key={tr.id}
-                    className={[
-                      "absolute left-0 right-0",
-                      selected ? "bg-white/5" : idx % 2 === 0 ? "bg-white/0" : "bg-white/2",
-                    ].join(" ")}
-                    style={{ top: yTop, height: rowH }}
-                  >
-                    <div className="absolute bottom-0 left-0 right-0 h-px bg-white/10" />
-
-                    <svg
-                      className="absolute inset-0"
-                      width="100%"
-                      height={rowH}
-                      viewBox={`0 0 ${timelineW} ${rowH}`}
-                    >
-                      {tr.keys.map((k) => {
-                        const x = timeToX(k.t, pxPerSec);
-                        const cy = rowH / 2;
-                        const r = 7;
-                        const isActive =
-                          drag?.type === "key" && drag.trackId === tr.id && drag.keyId === k.id;
-
-                        return (
-                          <g
-                            key={k.id}
-                            onPointerDown={(e) => onPointerDownKey(e, tr.id, k.id)}
-                            style={{ cursor: "grab" }}
-                          >
-                            <circle cx={x} cy={cy} r={16} fill="transparent" />
-                            <polygon
-                              points={diamondPoints(x, cy, r)}
-                              fill={isActive || selected ? "var(--accent)" : "rgba(255,255,255,0.25)"}
-                              stroke="rgba(0,0,0,0.35)"
-                              strokeWidth="1"
-                            />
-                          </g>
-                        );
-                      })}
-                    </svg>
-                  </div>
-                );
-              })}
-
-              {/* Playhead line across body */}
-              <div
-                className="absolute top-0 bottom-0 w-px bg-(--accent)"
-                style={{ left: timeToX(time, pxPerSec) }}
-                aria-hidden
-              />
+              <div className="px-3 py-2 text-xs text-(--muted) border-t border-(--muted) bg-black/15">
+                Eén timeline: ruler + keyframes zitten vast aan elkaar (Unity-style).
+              </div>
             </div>
-          </div>
-
-          <div className="px-3 py-2 text-xs text-(--muted) border-t border-(--muted) bg-black/15">
-            Click/drag in the ruler to scrub. Drag diamonds to move keyframes. Select a track and press K to keyframe the current pose.
           </div>
         </div>
 
@@ -576,7 +586,7 @@ export default function WorkingAnimationLine() {
                 }}
               />
 
-              {/* Limb renderer */}
+              {/* Limbs */}
               {ALL_LIMBS.map((l) => {
                 const id = l.id;
                 const p = pivots[id];
@@ -588,7 +598,6 @@ export default function WorkingAnimationLine() {
 
                 return (
                   <React.Fragment key={id}>
-                    {/* Limb line */}
                     <div
                       className="absolute"
                       style={{
@@ -598,15 +607,12 @@ export default function WorkingAnimationLine() {
                         height: 6,
                         transformOrigin: "0px 50%",
                         transform: `rotate(${ang}rad)`,
-                        background: trackExists
-                          ? "var(--accent)"
-                          : "rgba(255,255,255,0.25)",
+                        background: trackExists ? "var(--accent)" : "rgba(255,255,255,0.25)",
                         borderRadius: 9999,
                         opacity: selected ? 1 : 0.75,
                       }}
                     />
 
-                    {/* Pivot */}
                     <div
                       className="absolute rounded-full border border-black/40"
                       style={{
@@ -619,7 +625,6 @@ export default function WorkingAnimationLine() {
                       title={`${l.label} pivot`}
                     />
 
-                    {/* Drag handle at end */}
                     <div
                       className="absolute rounded-full"
                       onPointerDown={(e) => onPointerDownLimb(e, id)}
@@ -629,7 +634,9 @@ export default function WorkingAnimationLine() {
                         width: 20,
                         height: 20,
                         background: selected ? "var(--accent)" : "rgba(255,255,255,0.2)",
-                        border: selected ? "2px solid var(--text)" : "1px solid rgba(255,255,255,0.15)",
+                        border: selected
+                          ? "2px solid var(--text)"
+                          : "1px solid rgba(255,255,255,0.15)",
                         cursor: "grab",
                       }}
                       title={`Drag ${l.label}`}
@@ -638,7 +645,6 @@ export default function WorkingAnimationLine() {
                 );
               })}
 
-              {/* Hint */}
               <div className="absolute left-3 bottom-3 text-xs text-(--muted)">
                 Drag the round handles to rotate limbs.
               </div>
