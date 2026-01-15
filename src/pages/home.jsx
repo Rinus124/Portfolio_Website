@@ -28,7 +28,35 @@ export default function Home() {
         </div>
       </section>
       
-      {/* Projecten sectie komt in stap 4 */}
+          {/* AnimationLine */}
+          <div className="flex justify-center mt-8">
+          <svg width="1000" height="30" viewBox="0 0 1000 30">
+            
+            {/* Basis lijn */}
+            <line
+              x1="8"
+              y1="12"
+              x2="992"
+              y2="12"
+              stroke="var(--muted)"
+              strokeWidth="6"
+              strokeLinecap="round"
+            />
+
+            {/* Diamond puntjes op de lijn */}
+            {[100, 210, 290, 350, 450, 540, 645, 710, 820, 900].map((x, i) => (
+              <rect
+                key={i}
+                x={x - 4}
+                y={8}
+                width="8"
+                height="8"
+                fill="var(--accent)"
+                transform={`rotate(45 ${x} 12)`}
+              />
+            ))}
+          </svg>
+        </div>
     </div>
   );
 }
