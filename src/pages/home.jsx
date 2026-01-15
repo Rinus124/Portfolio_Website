@@ -34,7 +34,7 @@ export default function Home() {
       </section>
 
       {/* Timeline Title */}
-      <div className="container mx-auto text-center mt-12">
+      <div className="container mx-auto text-center mt-1">
         <h2 className="text-3xl font-bold text-(--text)">{siteConfig.TLTitle}</h2>
       </div>
 

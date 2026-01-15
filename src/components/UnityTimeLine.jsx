@@ -110,7 +110,7 @@ export default function WorkingAnimationLine() {
       id: "armL",
       name: "Left Arm",
       keys: [
-        { id: "k1", t: 0.0, v: -0.6 },
+        { id: "k1", t: 0.0, v: 2.3 },
         { id: "k2", t: 1.6, v: 0.7 },
         { id: "k3", t: 3.8, v: -0.3 },
       ],
@@ -123,11 +123,14 @@ export default function WorkingAnimationLine() {
 
   // Current pose (editable)
   const [pose, setPose] = useState(() => ({
-    armL: -0.6,
+    armL: 2.3,
     armR: 0.6,
-    legL: 0.25,
-    legR: -0.25,
+    legL: 1.75,
+    legR: 1.25,
   }));
+
+  // Add auto keyframe state
+  const [autoKeyframe, setAutoKeyframe] = useState(false);
 
   // Pose driven by playback/scrub
   const animatedPose = useMemo(() => {
@@ -323,6 +326,11 @@ export default function WorkingAnimationLine() {
     e.preventDefault();
     if (e.button != null && e.button !== 0) return;
     setIsPlaying(false); // nice UX: stop playback when editing
+    setSelectedTrackId(limbId);
+    if (!trackIds.has(limbId)) {
+      setDrag({ type: "tooltip", limbId, message: "Voeg ledemaat toe om te animeren" }); // first add track
+      return;
+    }
     setDrag({ type: "limb", limbId });
     e.currentTarget.setPointerCapture(e.pointerId);
   }
@@ -339,7 +347,13 @@ export default function WorkingAnimationLine() {
 
   function onPointerUpLimb(e) {
     if (e) e.preventDefault();
-    if (drag?.type === "limb") setDrag(null);
+    if (drag?.type === "limb") {
+      // Auto-add keyframe if enabled and track exists
+      if (autoKeyframe && trackIds.has(drag.limbId)) {
+        addKeyframe(drag.limbId);
+      }
+      setDrag(null);
+    }
   }
 
   const renderPose = drag?.type === "limb" ? pose : animatedPose;
@@ -372,7 +386,7 @@ export default function WorkingAnimationLine() {
             onClick={() => setIsPlaying((p) => !p)}
             title="Play/Pause (Space)"
           >
-            {isPlaying ? "Pause" : "Play"}
+            {isPlaying ? "Stoppen" : "Afspelen"}
           </button>
 
           <label className="flex items-center gap-2 text-xs text-(--muted)">
@@ -382,6 +396,16 @@ export default function WorkingAnimationLine() {
               onChange={(e) => setLoop(e.target.checked)}
             />
             Herhalen
+          </label>
+
+          {/* Add auto keyframe checkbox */}
+          <label className="flex items-center gap-2 text-xs text-(--muted)">
+            <input
+              type="checkbox"
+              checked={autoKeyframe}
+              onChange={(e) => setAutoKeyframe(e.target.checked)}
+            />
+            Auto Keyframe
           </label>
 
           <button
@@ -484,12 +508,12 @@ export default function WorkingAnimationLine() {
             })}
           </div>
 
-          <div className="px-5 pb-3 text-s text-(--muted)">
+          <div className="px-5 pb-3 text-s text-(--muted) border-t border-(--muted) bg-black/15">
             - Sleep ledenmaten naar verlangde pose. <br />
             - Voeg keyframes toe met de "Keyframe" knop of "K" toets. <br />
             - Speel af met de "Play" knop of spatiebalk.
           </div>
-          <div className="px-5 py-2 text-s text-(--muted) border-t border-(--muted) bg-black/15">
+          <div className="px-5 py-3 text-s text-(--muted) border-t border-(--muted) bg-black/15">
             Tip: <br />
             Spatie = Afspelen/Pauze. <br />
             K = Keyframe plaatsen op track.
@@ -746,7 +770,7 @@ export default function WorkingAnimationLine() {
 
             <div className="mt-3 text-xs text-(--muted)">
               Geselecteerd: <span className="text-(--text)">{selectedTrackId}</span>{" "}
-              {trackIds.has(selectedTrackId) ? "" : "(add a track to animate)"}
+              {trackIds.has(selectedTrackId) ? "" : <span className="text-xs text-red-500 px-2 py-2">(Voeg een track toe om te animeren)</span>}
             </div>
           </div>
         </div>
