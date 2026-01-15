@@ -3,8 +3,9 @@ import profilePic from "./pictures/ProfilePic.png";
 export const siteConfig = {
   name: "Marijn van Veggel",
   role: "XR Software Developer",
-  tagline: "Ik bouw interactieve XR-ervaringen die zich natuurlijk en intuïtief aanvoelen.",
+  tagline: "Ik bouw interactieve XR-ervaringen met Unity en C#. Met animatie als grote passie, klim ik in het Rokoko MoCap pak om leven in mijn creaties te blazen.",
   aboutImage: profilePic,
+  TLTitle: "My Animation TimeLine",
   cv: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
 
   socials: {
