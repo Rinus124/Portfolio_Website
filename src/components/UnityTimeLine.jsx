@@ -323,7 +323,6 @@ export default function WorkingAnimationLine() {
     e.preventDefault();
     if (e.button != null && e.button !== 0) return;
     setIsPlaying(false); // nice UX: stop playback when editing
-    setSelectedTrackId(limbId);
     setDrag({ type: "limb", limbId });
     e.currentTarget.setPointerCapture(e.pointerId);
   }
@@ -360,9 +359,9 @@ export default function WorkingAnimationLine() {
       {/* Toolbar */}
       <div className="flex items-center justify-between px-3 h-11 border-b border-(--muted) bg-black/30">
         <div className="flex items-center gap-3">
-          <div className="text-sm text-(--text) font-semibold">Animation</div>
+          <div className="text-sm text-(--text) font-semibold">Animatie Stickman</div>
           <div className="text-xs text-(--muted)">
-            Duration: {duration.toFixed(1)}s • Space = Play/Pause • K = Keyframe
+            Lengte: {duration.toFixed(1)}s
           </div>
         </div>
 
@@ -382,7 +381,7 @@ export default function WorkingAnimationLine() {
               checked={loop}
               onChange={(e) => setLoop(e.target.checked)}
             />
-            Loop
+            Herhalen
           </label>
 
           <button
@@ -428,17 +427,17 @@ export default function WorkingAnimationLine() {
                 className="text-xs text-(--accent) hover:opacity-80"
                 onClick={() => setShowAdd((s) => !s)}
               >
-                + Add
+                + Toevoegen
               </button>
 
               {showAdd && (
                 <div className="absolute right-0 mt-2 w-44 rounded-xl border border-(--muted) bg-black/80 backdrop-blur p-2 z-20">
                   <div className="text-[11px] text-(--muted) px-2 py-1">
-                    Add limb track
+                    Toevoeging ledemaat track
                   </div>
                   {addableLimbs.length === 0 && (
                     <div className="text-xs text-red-500 px-2 py-2">
-                      All limbs added
+                      Alle ledematen zijn toegevoegd
                     </div>
                   )}
                   {addableLimbs.map((l) => (
@@ -485,10 +484,15 @@ export default function WorkingAnimationLine() {
             })}
           </div>
 
-          <div className="px-3 pb-3 text-xs text-(--muted)">
-            Drag limbs → pose. <br />
-            Scrub timeline → playback. <br />
-            Space = play/pause, K = keyframe.
+          <div className="px-5 pb-3 text-s text-(--muted)">
+            - Sleep ledenmaten naar verlangde pose. <br />
+            - Voeg keyframes toe met de "Keyframe" knop of "K" toets. <br />
+            - Speel af met de "Play" knop of spatiebalk.
+          </div>
+          <div className="px-5 py-2 text-s text-(--muted) border-t border-(--muted) bg-black/15">
+            Tip: <br />
+            Spatie = Afspelen/Pauze. <br />
+            K = Keyframe plaatsen op track.
           </div>
         </div>
 
@@ -628,10 +632,6 @@ export default function WorkingAnimationLine() {
                   />
                 </div>
               </div>
-
-              <div className="px-3 py-2 text-xs text-(--muted) border-t border-(--muted) bg-black/15">
-                Tip: Space = play/pause. K = keyframe on selected track.
-              </div>
             </div>
           </div>
         </div>
@@ -639,7 +639,7 @@ export default function WorkingAnimationLine() {
         {/* RIGHT: Character */}
         <div className="shrink-0 bg-black/20" style={{ width: charPanelW }}>
           <div className="px-3 flex items-center justify-between" style={{ height: 44 }}>
-            <div className="text-xs text-(--muted)">Character</div>
+            <div className="text-xs text-(--muted)">Stickman</div>
             <div className="text-xs text-(--muted) tabular-nums">
               editing: {drag?.type === "limb" ? "yes" : "no"}
             </div>
@@ -739,12 +739,13 @@ export default function WorkingAnimationLine() {
               })}
 
               <div className="absolute left-3 bottom-3 text-xs text-(--muted)">
-                Drag handles to rotate limbs. (Playback stops when you edit)
+                Sleep de handles om de ledematen te roteren. <br />
+                (Playback stopt automatisch bij bewerken)
               </div>
             </div>
 
             <div className="mt-3 text-xs text-(--muted)">
-              Selected: <span className="text-(--text)">{selectedTrackId}</span>{" "}
+              Geselecteerd: <span className="text-(--text)">{selectedTrackId}</span>{" "}
               {trackIds.has(selectedTrackId) ? "" : "(add a track to animate)"}
             </div>
           </div>
