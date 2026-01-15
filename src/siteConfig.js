@@ -5,7 +5,7 @@ export const siteConfig = {
   role: "XR Software Developer",
   tagline: "Ik bouw interactieve XR-ervaringen met Unity en C#. Met animatie als grote passie, klim ik in het Rokoko MoCap pak om leven in mijn creaties te blazen.",
   aboutImage: profilePic,
-  TLTitle: "My Animation TimeLine",
+  TLTitle: "Bouw je eigen Animatie!",
   cv: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
 
   socials: {

@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 
@@ -46,9 +46,9 @@ const ALL_LIMBS = [
 ];
 
 export default function WorkingAnimationLine() {
-  // Timeline basics
-  const duration = 1.0;
-  const basePxPerSec = 700;
+  // ===== Timeline basics =====
+  const duration = 5.0; // ✅ 5 seconds
+  const basePxPerSec = 240; // lower because duration is bigger now
   const [zoom, setZoom] = useState(1.2);
   const pxPerSec = basePxPerSec * zoom;
 
@@ -58,19 +58,61 @@ export default function WorkingAnimationLine() {
   const headerH = 44;
   const rowH = 38;
 
-  // IMPORTANT: one ref for the ONE horizontal scroll container
+  // ONE horizontal scroller
   const timelineRef = useRef(null);
 
   const [time, setTime] = useState(0.0);
   const [drag, setDrag] = useState(null); // {type:"playhead"} | {type:"key",trackId,keyId} | {type:"limb",limbId}
 
+  // ===== Playback =====
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [loop, setLoop] = useState(false);
+  const lastTsRef = useRef(null);
+
+  useEffect(() => {
+    if (!isPlaying) {
+      lastTsRef.current = null;
+      return;
+    }
+
+    let rafId = 0;
+
+    const tick = (ts) => {
+      if (lastTsRef.current == null) lastTsRef.current = ts;
+      const dt = (ts - lastTsRef.current) / 1000;
+      lastTsRef.current = ts;
+
+      setTime((prev) => {
+        let next = prev + dt;
+
+        if (next >= duration) {
+          if (loop) {
+            next = next % duration;
+          } else {
+            next = duration;
+            // stop playback
+            setIsPlaying(false);
+          }
+        }
+        return next;
+      });
+
+      rafId = requestAnimationFrame(tick);
+    };
+
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
+  }, [isPlaying, duration, loop]);
+
+  // ===== Tracks =====
   const [tracks, setTracks] = useState(() => [
     {
       id: "armL",
       name: "Left Arm",
       keys: [
         { id: "k1", t: 0.0, v: -0.6 },
-        { id: "k2", t: 0.8, v: 0.7 },
+        { id: "k2", t: 1.6, v: 0.7 },
+        { id: "k3", t: 3.8, v: -0.3 },
       ],
     },
   ]);
@@ -79,6 +121,7 @@ export default function WorkingAnimationLine() {
   const [selectedTrackId, setSelectedTrackId] = useState("armL");
   const [showAdd, setShowAdd] = useState(false);
 
+  // Current pose (editable)
   const [pose, setPose] = useState(() => ({
     armL: -0.6,
     armR: 0.6,
@@ -86,6 +129,7 @@ export default function WorkingAnimationLine() {
     legR: -0.25,
   }));
 
+  // Pose driven by playback/scrub
   const animatedPose = useMemo(() => {
     const next = { ...pose };
     for (const tr of tracks) {
@@ -100,7 +144,7 @@ export default function WorkingAnimationLine() {
     setPose((p) => ({ ...p, [limbId]: angle }));
   }
 
-  // Convert clientX -> local timeline X (includes scrollLeft)
+  // ===== Time picking =====
   function getLocalX(clientX) {
     const el = timelineRef.current;
     if (!el) return 0;
@@ -115,6 +159,8 @@ export default function WorkingAnimationLine() {
 
   function onPointerDownTimeline(e) {
     if (e.button != null && e.button !== 0) return;
+    // stop selection + stop page scrolling/highlighting
+    e.preventDefault();
     setDrag({ type: "playhead" });
     e.currentTarget.setPointerCapture(e.pointerId);
     setPlayheadFromClientX(e.clientX);
@@ -122,6 +168,7 @@ export default function WorkingAnimationLine() {
 
   function onPointerMoveTimeline(e) {
     if (!drag) return;
+    e.preventDefault();
 
     if (drag.type === "playhead") {
       setPlayheadFromClientX(e.clientX);
@@ -144,18 +191,22 @@ export default function WorkingAnimationLine() {
     }
   }
 
-  function endDrag() {
+  function endDrag(e) {
+    if (e) e.preventDefault();
     setDrag(null);
   }
 
   function onPointerDownKey(e, trackId, keyId) {
     e.stopPropagation();
+    e.preventDefault();
     if (e.button != null && e.button !== 0) return;
+
     setSelectedTrackId(trackId);
     setDrag({ type: "key", trackId, keyId });
     e.currentTarget.setPointerCapture(e.pointerId);
   }
 
+  // ===== Track ops =====
   function addTrack(limbId) {
     const meta = ALL_LIMBS.find((l) => l.id === limbId);
     if (!meta) return;
@@ -179,8 +230,8 @@ export default function WorkingAnimationLine() {
     setTracks((prev) =>
       prev.map((tr) => {
         if (tr.id !== trackId) return tr;
-        const existing = tr.keys.find((k) => Math.abs(k.t - time) < 1e-3);
 
+        const existing = tr.keys.find((k) => Math.abs(k.t - time) < 1e-3);
         if (existing) {
           return {
             ...tr,
@@ -199,15 +250,21 @@ export default function WorkingAnimationLine() {
     );
   }
 
+  // Shortcut
   function onKeyDown(e) {
     if (e.key.toLowerCase() === "k") {
       if (selectedTrackId) addKeyframe(selectedTrackId);
     }
+    if (e.key === " ") {
+      e.preventDefault();
+      setIsPlaying((p) => !p);
+    }
   }
 
-  // Grid
-  const majorStep = 0.1;
-  const minorStep = 0.02;
+  // ===== Grid =====
+  // With 5 seconds, coarser major ticks feel better:
+  const majorStep = 0.5;
+  const minorStep = 0.1;
 
   const majorLines = useMemo(() => {
     const arr = [];
@@ -228,7 +285,7 @@ export default function WorkingAnimationLine() {
   const timelineW = Math.max(900, duration * pxPerSec + 120);
   const rows = tracks.length;
 
-  // Character layout
+  // ===== Character layout =====
   const charH = 380;
   const torso = { x: 150, y: 150, w: 60, h: 90 };
   const head = { x: 150, y: 95, r: 24 };
@@ -263,7 +320,9 @@ export default function WorkingAnimationLine() {
   }
 
   function onPointerDownLimb(e, limbId) {
+    e.preventDefault();
     if (e.button != null && e.button !== 0) return;
+    setIsPlaying(false); // nice UX: stop playback when editing
     setSelectedTrackId(limbId);
     setDrag({ type: "limb", limbId });
     e.currentTarget.setPointerCapture(e.pointerId);
@@ -271,6 +330,7 @@ export default function WorkingAnimationLine() {
 
   function onPointerMoveLimb(e) {
     if (!drag || drag.type !== "limb") return;
+    e.preventDefault();
     const { limbId } = drag;
     const p = pivots[limbId];
     const pt = clientToCharXY(e.clientX, e.clientY);
@@ -278,7 +338,8 @@ export default function WorkingAnimationLine() {
     setLimbAngle(limbId, ang);
   }
 
-  function onPointerUpLimb() {
+  function onPointerUpLimb(e) {
+    if (e) e.preventDefault();
     if (drag?.type === "limb") setDrag(null);
   }
 
@@ -290,21 +351,46 @@ export default function WorkingAnimationLine() {
       className="w-full rounded-2xl border border-(--muted) bg-black/20 overflow-hidden"
       tabIndex={0}
       onKeyDown={onKeyDown}
+      // ✅ prevent blue selection everywhere
+      style={{
+        WebkitUserSelect: "none",
+        userSelect: "none",
+      }}
     >
       {/* Toolbar */}
       <div className="flex items-center justify-between px-3 h-11 border-b border-(--muted) bg-black/30">
         <div className="flex items-center gap-3">
           <div className="text-sm text-(--text) font-semibold">Animation</div>
-          <div className="text-xs text-(--muted)">Mini Rig Editor</div>
+          <div className="text-xs text-(--muted)">
+            Duration: {duration.toFixed(1)}s • Space = Play/Pause • K = Keyframe
+          </div>
         </div>
 
         <div className="flex items-center gap-3">
+          {/* ✅ Play/Pause */}
+          <button
+            className="text-xs px-3 py-1 rounded-lg border border-(--muted) text-(--text) hover:bg-white/5"
+            onClick={() => setIsPlaying((p) => !p)}
+            title="Play/Pause (Space)"
+          >
+            {isPlaying ? "Pause" : "Play"}
+          </button>
+
+          <label className="flex items-center gap-2 text-xs text-(--muted)">
+            <input
+              type="checkbox"
+              checked={loop}
+              onChange={(e) => setLoop(e.target.checked)}
+            />
+            Loop
+          </label>
+
           <button
             className="text-xs px-3 py-1 rounded-lg border border-(--muted) text-(--text) hover:bg-white/5"
             onClick={() => selectedTrackId && addKeyframe(selectedTrackId)}
             title="Keyframe (K)"
           >
-            Keyframe (K)
+            Keyframe
           </button>
 
           <div className="text-xs text-(--muted)">Zoom</div>
@@ -317,8 +403,12 @@ export default function WorkingAnimationLine() {
             onChange={(e) => setZoom(parseFloat(e.target.value))}
             className="w-40"
           />
-          <div className="text-xs text-(--muted) tabular-nums w-12 text-right">
+          <div className="text-xs text-(--muted) tabular-nums w-14 text-right">
             {zoom.toFixed(2)}x
+          </div>
+
+          <div className="text-xs text-(--muted) tabular-nums w-20 text-right">
+            t={time.toFixed(3)}s
           </div>
         </div>
       </div>
@@ -328,7 +418,7 @@ export default function WorkingAnimationLine() {
         {/* LEFT: Tracks */}
         <div
           className="shrink-0 border-r border-(--muted) bg-black/25"
-          style={{ width: leftPanelW }}
+          style={{ width: 260 }}
         >
           <div className="flex items-center justify-between px-3" style={{ height: 44 }}>
             <div className="text-xs text-(--muted)">Tracks</div>
@@ -347,7 +437,7 @@ export default function WorkingAnimationLine() {
                     Add limb track
                   </div>
                   {addableLimbs.length === 0 && (
-                    <div className="text-xs text-(--muted) px-2 py-2">
+                    <div className="text-xs text-red-500 px-2 py-2">
                       All limbs added
                     </div>
                   )}
@@ -398,7 +488,7 @@ export default function WorkingAnimationLine() {
           <div className="px-3 pb-3 text-xs text-(--muted)">
             Drag limbs → pose. <br />
             Scrub timeline → playback. <br />
-            Press <span className="text-(--text)">K</span> to keyframe selected track.
+            Space = play/pause, K = keyframe.
           </div>
         </div>
 
@@ -446,7 +536,7 @@ export default function WorkingAnimationLine() {
                 </div>
               </div>
 
-              {/* Vertical scroll area for rows (shares same horizontal scroll) */}
+              {/* Rows vertical scroll (shares horizontal scroll) */}
               <div className="relative overflow-y-auto" style={{ maxHeight: 420 }}>
                 <div className="relative" style={{ width: timelineW, height: rows * rowH }}>
                   {/* Grid */}
@@ -540,7 +630,7 @@ export default function WorkingAnimationLine() {
               </div>
 
               <div className="px-3 py-2 text-xs text-(--muted) border-t border-(--muted) bg-black/15">
-                Eén timeline: ruler + keyframes zitten vast aan elkaar (Unity-style).
+                Tip: Space = play/pause. K = keyframe on selected track.
               </div>
             </div>
           </div>
@@ -551,7 +641,7 @@ export default function WorkingAnimationLine() {
           <div className="px-3 flex items-center justify-between" style={{ height: 44 }}>
             <div className="text-xs text-(--muted)">Character</div>
             <div className="text-xs text-(--muted) tabular-nums">
-              t={time.toFixed(3)}s
+              editing: {drag?.type === "limb" ? "yes" : "no"}
             </div>
           </div>
 
@@ -559,7 +649,7 @@ export default function WorkingAnimationLine() {
             <div
               ref={charRef}
               className="relative rounded-2xl border border-(--muted) bg-black/30 overflow-hidden"
-              style={{ width: "100%", height: charH }}
+              style={{ width: "100%", height: charH, touchAction: "none" }}
               onPointerMove={onPointerMoveLimb}
               onPointerUp={onPointerUpLimb}
               onPointerCancel={onPointerUpLimb}
@@ -598,6 +688,7 @@ export default function WorkingAnimationLine() {
 
                 return (
                   <React.Fragment key={id}>
+                    {/* Limb */}
                     <div
                       className="absolute"
                       style={{
@@ -613,6 +704,7 @@ export default function WorkingAnimationLine() {
                       }}
                     />
 
+                    {/* Pivot */}
                     <div
                       className="absolute rounded-full border border-black/40"
                       style={{
@@ -625,6 +717,7 @@ export default function WorkingAnimationLine() {
                       title={`${l.label} pivot`}
                     />
 
+                    {/* Drag handle */}
                     <div
                       className="absolute rounded-full"
                       onPointerDown={(e) => onPointerDownLimb(e, id)}
@@ -646,7 +739,7 @@ export default function WorkingAnimationLine() {
               })}
 
               <div className="absolute left-3 bottom-3 text-xs text-(--muted)">
-                Drag the round handles to rotate limbs.
+                Drag handles to rotate limbs. (Playback stops when you edit)
               </div>
             </div>
 
