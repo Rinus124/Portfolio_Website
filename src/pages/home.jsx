@@ -1,5 +1,5 @@
 import { siteConfig } from "../siteConfig";
-import TimeLineDragger from "../components/TimeLineDragger";
+import TimeLineDragger from "../components/UnityTimeLine";
 
 export default function Home() {
   return (
