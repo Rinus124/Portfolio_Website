@@ -1,4 +1,5 @@
-import profilePic from "./pictures/ProfilePic.png";
+import profilePic from "./pictures/Foto_Portfolio1.webp";
+
 
 export const siteConfig = {
   name: "Marijn van Veggel",

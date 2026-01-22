@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import projectData from "../data/projectdata.json";
+import projectDataEigen from "../data/projectdata_eigen.json";
 import ProjectHeader from "../components/projects/ProjectHeader";
 import ProjectInfo from "../components/projects/ProjectInfo";
 import ProjectGallery from "../components/projects/ProjectGallery";
@@ -9,8 +10,9 @@ import ProjectPrevNext from "../components/projects/ProjectPrevNext";
 export default function ProjectPage() {
     const { projectId } = useParams();
     const project = projectData.projects.find(p => p.id === projectId);
+    const projectEigen = projectDataEigen.projects.find(p => p.id === projectId);
 
-    if (!project) {
+    if (!project && !projectEigen) {
         return <div className="container mx-auto px-4 py-12 text-center">Project niet gevonden</div>;
     }
 

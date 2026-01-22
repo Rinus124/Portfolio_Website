@@ -1,5 +1,6 @@
 import { siteConfig } from "../siteConfig";
 import TimeLineDragger from "../components/UnityTimeLine";
+import PlaceHolderPic from "../pictures/Place_holder.webp";
 
 export default function Home() {
   return (
@@ -11,14 +12,33 @@ export default function Home() {
 
         {/* Informatie */}
         <div className="container mx-auto flex flex-col items-center text-center relative z-10">
-          {/* Profielfoto */}
+
+        {/* Foto's container */}
+        <div className="flex justify-center items-end gap-6 mb-6">
+
+          {/* Placeholder links */}
+          <img
+            src={PlaceHolderPic}
+            alt="Placeholder left"
+            className="w-80 h-96 object-cover border-5 border-(--accent) shadow-lg"
+          />
+
+          {/* Foto midden */}
           <img
             src={siteConfig.aboutImage}
             alt={siteConfig.name}
-            className="w-40 h-40 rounded-full object-cover border-4 border-(--accent) shadow-lg mb-6"
+            className="w-70 h-70 object-cover border-5 border-(--accent) shadow-lg"
           />
 
-          {/* Naam en rol */}
+          {/* Placeholder rechts */}
+          <img
+            src={PlaceHolderPic}
+            alt="Placeholder right"
+            className="w-80 h-96 object-cover border-5 border-(--accent) shadow-lg"
+          />
+        </div>
+
+          {/* Naam en Rol */}
           <h1 className="text-5xl font-bold text-(--text) mb-2">
             {siteConfig.name}
           </h1>
