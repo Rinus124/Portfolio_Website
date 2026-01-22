@@ -6,37 +6,42 @@ export default function Home() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative py-20 px-4">
+      <section className="relative py-24 px-4 overflow-hidden">
         {/* Decoratieve glow achter foto */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-(--accent) rounded-full blur-3xl opacity-20" />
 
+        {/* Linker placeholder (rond tekst) */}
+        <img
+          src={PlaceHolderPic}
+          alt="Placeholder left"
+          className="
+            hidden lg:block
+            absolute left-5 top-1/2 -translate-y-1/2
+            w-80 h-96 object-cover
+            border-5 border-(--accent) shadow-lg
+          "
+        />
+
+        {/* Rechter placeholder (rond tekst) */}
+        <img
+          src={PlaceHolderPic}
+          alt="Placeholder right"
+          className="
+            hidden lg:block
+            absolute right-5 top-1/2 -translate-y-1/2
+            w-80 h-96 object-cover
+            border-5 border-(--accent) shadow-lg
+          "
+        />
+
         {/* Informatie */}
         <div className="container mx-auto flex flex-col items-center text-center relative z-10">
-
-        {/* Foto's container */}
-        <div className="flex justify-center items-end gap-6 mb-6">
-
-          {/* Placeholder links */}
-          <img
-            src={PlaceHolderPic}
-            alt="Placeholder left"
-            className="w-80 h-96 object-cover border-5 border-(--accent) shadow-lg"
-          />
-
           {/* Foto midden */}
           <img
             src={siteConfig.aboutImage}
             alt={siteConfig.name}
-            className="w-70 h-70 object-cover border-5 border-(--accent) shadow-lg"
+            className="w-70 h-70 object-cover border-5 border-(--accent) shadow-lg mb-6"
           />
-
-          {/* Placeholder rechts */}
-          <img
-            src={PlaceHolderPic}
-            alt="Placeholder right"
-            className="w-80 h-96 object-cover border-5 border-(--accent) shadow-lg"
-          />
-        </div>
 
           {/* Naam en Rol */}
           <h1 className="text-5xl font-bold text-(--text) mb-2">
@@ -55,7 +60,9 @@ export default function Home() {
 
       {/* Timeline Title */}
       <div className="container mx-auto text-center mt-1">
-        <h2 className="text-3xl font-bold text-(--text)">{siteConfig.TLTitle}</h2>
+        <h2 className="text-3xl font-bold text-(--text)">
+          {siteConfig.TLTitle}
+        </h2>
       </div>
 
       {/* TimeLine + Dragger Component */}

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import IconChooser from "./projects/ProjectIconChooser";
 
 export default function ProjectCard({ project }) {
   return (
@@ -25,6 +26,7 @@ export default function ProjectCard({ project }) {
         <div className="flex flex-wrap gap-2 mt-3">
           {project.tags.slice(0, 3).map((tag) => (
             <span key={tag} className="tag">
+              <IconChooser ProjectIconChooser tag={tag} />  
               {tag}
             </span>
           ))}
