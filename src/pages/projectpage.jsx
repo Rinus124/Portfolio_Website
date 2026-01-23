@@ -1,6 +1,9 @@
 import { useParams } from "react-router-dom";
 import projectData from "../data/projectdata.json";
 import projectDataEigen from "../data/projectdata_eigen.json";
+const allProjects = {
+    projects: [...projectData.projects, ...projectDataEigen.projects]
+};
 import ProjectHeader from "../components/projects/ProjectHeader";
 import ProjectInfo from "../components/projects/ProjectInfo";
 import ProjectGallery from "../components/projects/ProjectGallery";
@@ -9,25 +12,24 @@ import ProjectPrevNext from "../components/projects/ProjectPrevNext";
 
 export default function ProjectPage() {
     const { projectId } = useParams();
-    const project = projectData.projects.find(p => p.id === projectId);
-    const projectEigen = projectDataEigen.projects.find(p => p.id === projectId);
+    const project = allProjects.projects.find(p => p.id === projectId);
 
-    if (!project && !projectEigen) {
+    if (!project) {
         return <div className="container mx-auto px-4 py-12 text-center">Project niet gevonden</div>;
     }
 
     // Find previous and next projects (with looping)
-    const currentIndex = projectData.projects.findIndex(p => p.id === projectId);
-    const previousIndex = currentIndex > 0 ? currentIndex - 1 : projectData.projects.length - 1;
-    const nextIndex = currentIndex < projectData.projects.length - 1 ? currentIndex + 1 : 0;
+    const currentIndex = allProjects.projects.findIndex(p => p.id === projectId);
+    const previousIndex = currentIndex > 0 ? currentIndex - 1 : allProjects.projects.length - 1;
+    const nextIndex = currentIndex < allProjects.projects.length - 1 ? currentIndex + 1 : 0;
     
     const previousProject = { 
-        title: projectData.projects[previousIndex].title, 
-        url: `/projects/${projectData.projects[previousIndex].id}` 
+        title: allProjects.projects[previousIndex].title, 
+        url: `/projects/${allProjects.projects[previousIndex].id}` 
     };
     const nextProject = { 
-        title: projectData.projects[nextIndex].title, 
-        url: `/projects/${projectData.projects[nextIndex].id}` 
+        title: allProjects.projects[nextIndex].title, 
+        url: `/projects/${allProjects.projects[nextIndex].id}` 
     };
 
     return (

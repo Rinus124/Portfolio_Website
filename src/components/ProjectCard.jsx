@@ -25,10 +25,10 @@ export default function ProjectCard({ project }) {
         {/* Tags */}
         <div className="flex flex-wrap gap-2 mt-3">
           {project.tags.slice(0, 3).map((tag) => (
-            <span key={tag} className="tag">
-              <IconChooser ProjectIconChooser tag={tag} />  
-              {tag}
-            </span>
+          <span key={tag} className="tag">
+            <IconChooser tag={tag} />
+            {tag}
+          </span>
           ))}
         </div>
       </div>

@@ -15,7 +15,7 @@ const ProjectIconChooser = ({ tag }) => {
         return iconMap[tag] || 'default';
     }, [tag]);
 
-    const iconPath = `/icons/${iconName}.svg`;
+    const iconPath = `.../public/${iconName}.svg`;
 
     return (
         <img 
