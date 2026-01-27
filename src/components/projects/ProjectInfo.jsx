@@ -32,6 +32,11 @@ export default function ProjectInfo({ project }) {
               <span>{project.timeline}</span>
             </li>
 
+              <li className="flex justify-between border-b border-(--bordercolor) pb-1">
+                <span className="font-medium text-(--text)">Status</span>
+                <span>{project.Status || "Onbekend"}</span>
+              </li>
+
             <li className="flex justify-between items-center pb-1">
               <span className="font-medium text-(--text)">Tags</span>
               <div className="flex flex-wrap gap-1.5 justify-end">

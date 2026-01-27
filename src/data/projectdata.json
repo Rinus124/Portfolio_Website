@@ -1,10 +1,10 @@
 {
   "projects": [
     {
-      "id": "asteroids-3d",
-      "title": "Asteroids 3D",
-      "tagline": "Een moderne 3D-remake van de arcade klassieker.",
-      "description": "Asteroids 3D is een moderne remake van de klassieke arcade game. Het doel was om physics-based movement te combineren met een minimalistische sci-fi stijl. Door veel playtesting vond ik de perfecte balans tussen thrust force, rotation speed en projectile velocity.\n\nTijdens het project focuste ik op iteratief werken en het snel ontwikkelen van speelbare prototypes. Daarbij heb ik veel geleerd over component-based architecture, het gebruik van ScriptableObjects voor game balancing en het implementeren van object pooling voor betere performance.",
+      "id": "vr-shooter",
+      "title": "Syndrome: Fever Dream",
+      "tagline": "Een unieke VR shooter met physics-based wapens. En een grote boss fight.",
+      "description": "In deze VR shooter heb ik me samen met de GLU Artist studenten gericht op het creëren van een immersive ervaring. Je vecht tegen Robots in een droom die je in het ziekenhuis beleefd.\n\nHet project bevat ook een uitdagende boss fight waarbij de speler strategisch moeten bewegen en gebruik moeten maken van de omgeving om te overleven. De boss heeft meerdere aanvalspatronen die spelers dwingen om hun tactiek aan te passen.\n\nDit project hielp mij mijn vaardigheden in VR-ontwikkeling, physics simulatie en enemy AI te verbeteren.",
       "thumbnail": "https://picsum.photos/seed/asteroids/1200/600",
       "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",
       "screenshots": [
@@ -18,7 +18,8 @@
         "Physics"
       ],
       "projectRole": "Gameplay Programmer",
-      "timeline": "2 weken",
+      "timeline": "4 weken",
+      "Status": "Speelbaar",
       "mechanics": [
         {
           "subtitle": "Movement System",
