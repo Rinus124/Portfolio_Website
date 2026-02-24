@@ -1,8 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import "../index.css";
 
 export default function Footer() {
   const [value, setValue] = useState("");
   const [error, setError] = useState(false);
+
+  const navigate = useNavigate();
 
   const rightCodes = ["konami", "letmein", "opensesame"];
 
@@ -11,15 +16,12 @@ export default function Footer() {
 
     if (rightCodes.includes(value.toLowerCase())) {
       setError(false);
-
-      // juiste code
-      console.log("Konami code geactiveerd!");
+      navigate("/projects");
     } else {
-      // verkeerde code
       setError(true);
     }
 
-    setValue(""); // input leegmaken
+    setValue("");
   };
 
   return (
