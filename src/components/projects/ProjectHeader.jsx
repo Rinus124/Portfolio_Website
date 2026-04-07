@@ -1,20 +1,46 @@
 export default function ProjectHeader({ project }) {
   return (
     <div className="relative w-full mb-4 overflow-hidden">
-      {/* Banner Image */}
+      
+      {/* Banner */}
       <img 
         src={project.thumbnail} 
-        alt={project.title} 
+        alt={project.title}
         className="w-full h-48 sm:h-64 object-cover" 
       />
 
-      {/* Gradient overlay voor leesbaarheid */}
+      {/* Gradient */}
       <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent" />
 
-      {/* Text overlay */}
+      {/* Overlay */}
       <div className="absolute bottom-4 left-4">
-        <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-md mb-1">{project.title}</h1>
-        <p className="text-base text-gray-300 max-w-xl drop-shadow-sm font-medium">{project.tagline}</p>
+        
+        {project.logo ? (
+          // als logo = logo + tagline
+          <>
+            <img 
+              src={project.logo} 
+              alt={`${project.title} logo`}
+              className="h-20 md:h-20 object-contain drop-shadow-md mb-2"
+            />
+
+            <p className="text-base text-gray-300 max-w-xl drop-shadow-sm font-medium">
+              {project.tagline}
+            </p>
+          </>
+        ) : (
+          // anders title + tagline
+          <>
+            <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-md mb-1">
+              {project.title}
+            </h1>
+
+            <p className="text-base text-gray-300 max-w-xl drop-shadow-sm font-medium">
+              {project.tagline}
+            </p>
+          </>
+        )}
+
       </div>
     </div>
   );

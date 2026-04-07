@@ -22,7 +22,7 @@ export default function ProjectMechanics({ project }) {
           {/* Code + Image Grid */}
           <div className="grid grid-cols-1 md:grid-cols-[65%_35%] gap-4">
             {/* Code block with syntax highlighting */}
-            <div className="h-60 overflow-auto rounded-lg">
+            <div className="h-120 overflow-auto rounded-lg">
               <SyntaxHighlighter
                 language="csharp"
                 style={vscDarkPlus}
