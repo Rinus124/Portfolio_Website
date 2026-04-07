@@ -22,6 +22,7 @@
       "projectRole": "Gameplay Programmer",
       "timeline": "4 weken",
       "Status": "Speelbaar",
+      "year": "Jaar 1, 4e Kwartaal",
       "mechanics": [
         {
           "subtitle": "Boss (Fight)",
@@ -35,8 +36,8 @@
       "itch": "https://xanoblade404.itch.io/syndrome-fever-dream"
     },
     {
-      "id": "xr-escape-room",
-      "title": "XR Escape Room",
+      "id": "medieval mimicry",
+      "title": "Medieval Mimicry",
       "tagline": "Een VR escape room met physics puzzels en interacties.",
       "description": "Deze XR escape room is ontwikkeld met Unity's XR Interaction Toolkit en plaatst spelers in een mysterieuze kamer vol interactieve puzzels. Elke puzzel kan op meerdere manieren opgelost worden, wat spelers de vrijheid geeft om creatief te denken.\n\nIk wilde onderzoeken hoe je natuurlijke interacties kunt bouwen met VR controllers waarbij physics-based interactions zorgen voor maximale immersion.\n\nHet project richtte zich op drie kernpijlers: natuurlijke object manipulatie, physics-based puzzels en environmental storytelling waarbij de ruimte zelf het verhaal vertelt.",
       "thumbnail": "https://picsum.photos/seed/xr/1200/600",
@@ -54,6 +55,7 @@
       ],
       "projectRole": "XR Interaction Designer",
       "timeline": "3 weken",
+      "year": "Jaar 4",
       "mechanics": [
         {
           "subtitle": "Grab Interaction",
@@ -64,8 +66,8 @@
       ]
     },
     {
-      "id": "topdown-shooter",
-      "title": "Topdown Shooter",
+      "id": "installatie school",
+      "title": "Fysieke Installatie",
       "tagline": "Een snelle twin-stick shooter met vijandige AI.",
       "description": "Deze topdown shooter begon als een experiment om enemy AI te bouwen en groeide uit tot een complete arcade-style game. Het doel was om tight, responsive controls te combineren met challenging maar faire enemy behaviors.\n\nLater werd het uitgebreid met verschillende enemy types, wave progression systems en satisfying hit-feedback door screen shake en particle effects te combineren.\n\nHet project hielp mij de basis van AI state machines, navmesh pathfinding en difficulty balancing beter te leren begrijpen.",
       "thumbnail": "https://picsum.photos/seed/shooter/1200/600",
@@ -82,6 +84,7 @@
       ],
       "projectRole": "Programmer",
       "timeline": "1 week",
+      "year": "Jaar 4",
       "mechanics": [
         {
           "subtitle": "Enemy AI State Machine",
@@ -98,9 +101,10 @@
       ]
     },
     {
-      "id": "vr-training-sim",
-      "title": "VR Training Simulator",
+      "id": "vr-store",
+      "title": "VR Store",
       "tagline": "Een realistische VR-training voor industriële procedures.",
+      
       "description": "Deze VR training simulator is gebouwd voor het oefenen van complexe industriële procedures in een volledig veilige virtuele omgeving. Het doel was om een training te creëren die net zo effectief is als hands-on training, maar zonder de risico's en kosten.\n\nDe focus lag op realistische hand-tracking voor natuurlijke interacties, stapsgewijze instructies die gebruikers begeleiden en gedetailleerde feedback op gebruikersacties waarbij immediate feedback het leerproces versterkt.\n\nHet project leerde mij hoe je effectieve VR training ervaringen ontwerpt met verschillende difficulty modes en performance tracking om daadwerkelijk kennisoverdracht te bevorderen.",
       "thumbnail": "https://picsum.photos/seed/vrtrain/1200/600",
       "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",
@@ -117,6 +121,7 @@
       ],
       "projectRole": "VR Developer",
       "timeline": "4 weken",
+      "year": "Jaar 4",
       "mechanics": [
         {
           "subtitle": "Step-by-Step Guide System",
@@ -153,6 +158,7 @@
       ],
       "projectRole": "AR Developer",
       "timeline": "3 weken",
+      "year": "Jaar 4",
       "mechanics": [
         {
           "subtitle": "Image Tracking System",

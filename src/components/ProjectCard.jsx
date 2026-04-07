@@ -5,30 +5,51 @@ export default function ProjectCard({ project }) {
   return (
     <Link
       to={`/projects/${project.id}`}
-      className="group block bg-(--surface) rounded-lg overflow-hidden border border-(--bordercolor) hover:border-(--accent) transition-all duration-300">
+      className="group block bg-(--surface) rounded-lg overflow-hidden border border-(--bordercolor) hover:border-(--accent) transition-all duration-300"
+    >
 
       {/* Thumbnail met overlay */}
       <div className="relative aspect-video overflow-hidden">
-        <img src={project.thumbnail} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+        <img
+          src={project.thumbnail}
+          alt={project.title}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+        />
+
+        {/* logo (alleen als die bestaat) */}
+        {project.logo && (
+          <img
+            src={project.logo}
+            alt={`${project.title} logo`}
+            className="absolute bottom-2 left-2 h-20 md:h-20 object-contain bg-black/40 p-1 rounded-md backdrop-blur-sm"
+          />
+        )}
 
         {/* Hover overlay */}
         <div className="absolute inset-0 bg-(--overlay) opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-          <span className="text-(--text) font-semibold">Bekijk Project →</span>
+          <span className="text-(--text) font-semibold">
+            Bekijk Project →
+          </span>
         </div>
       </div>
 
       {/* Content */}
       <div className="p-4">
-        <h3 className="text-lg font-semibold text-(--text) mb-1 group-hover:text-(--accent) transition-colors">{project.title}</h3>
-        <p className="text-sm text-(--muted) line-clamp-2">{project.tagline}</p>
+        <h3 className="text-lg font-semibold text-(--text) mb-1 group-hover:text-(--accent) transition-colors">
+          {project.title}
+        </h3>
+
+        <p className="text-sm text-(--muted) line-clamp-2">
+          {project.tagline}
+        </p>
 
         {/* Tags */}
         <div className="flex flex-wrap gap-2 mt-3">
           {project.tags.slice(0, 3).map((tag) => (
-          <span key={tag} className="tag">
-            <IconChooser tag={tag} />
-            {tag}
-          </span>
+            <span key={tag} className="tag">
+              <IconChooser tag={tag} />
+              {tag}
+            </span>
           ))}
         </div>
       </div>

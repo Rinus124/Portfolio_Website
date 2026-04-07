@@ -38,7 +38,7 @@
     },
 
     {
-      "id": "ProtfolioSite",
+      "id": "PortfolioSite",
       "title": "Portfolio Website",
       "tagline": "Een persoonlijke portfolio website om mijn projecten te tonen.",
       "description": "Dit project is opgezet om een persoonlijke portfolio website te bouwen waarin ik mijn projecten, skills en ervaringen kan tonen. De website is gebouwd met React en gebruikt Tailwind CSS voor styling. Het bevat een dynamische projectpagina die automatisch gegenereerd wordt op basis van JSON data.",
