@@ -16,12 +16,23 @@ export default function ProjectCard({ project }) {
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
 
-        {/* logo (alleen als die bestaat) */}
+        {/* Logo */}
         {project.logo && (
           <img
-            src={project.logo}
+            src={
+              typeof project.logo === "string"
+                ? project.logo
+                : project.logo.src
+            }
             alt={`${project.title} logo`}
-            className="absolute bottom-2 left-2 h-20 md:h-20 object-contain bg-black/40 p-1 rounded-md backdrop-blur-sm"
+            className={`
+              absolute bottom-2 left-2
+              ${
+                typeof project.logo === "object" && project.logo.className
+                  ? project.logo.className
+                  : "h-16"
+              }
+            `}
           />
         )}
 

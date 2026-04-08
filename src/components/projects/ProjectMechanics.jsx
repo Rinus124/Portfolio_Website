@@ -43,7 +43,7 @@ export default function ProjectMechanics({ project }) {
                 <img
                   src={m.image}
                   alt={m.subtitle}
-                  className="w-full h-60 object-cover rounded-lg cursor-pointer hover:opacity-80 transition-opacity"
+                  className="w-full h-100 object-cover rounded-lg cursor-pointer hover:opacity-80 transition-opacity"
                 />
               </a>
             )}

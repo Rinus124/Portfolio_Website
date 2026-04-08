@@ -3,7 +3,10 @@
     {
       "id": "vr-shooter",
       "title": "Syndrome: Fever Dream",
-      "logo": "./public/SFD/LogoSFD.webp",
+      "logo": {
+        "src": "./public/SFD/LogoSFD.webp",
+        "className": "w-48 h-20 rounded-md"
+      },
       "tagline": "Een unieke VR shooter met physics-based wapens. En een grote boss fight.",
       "description": "In deze VR shooter heb ik me samen met de GLU Artist studenten gericht op het creëren van een immersive ervaring. Je vecht tegen Robots in een droom die je in het ziekenhuis beleefd.\n\nHet project bevat ook een uitdagende boss fight waarbij de speler strategisch moeten bewegen en gebruik moeten maken van de omgeving om te overleven. De boss heeft meerdere aanvalspatronen die spelers dwingen om hun tactiek aan te passen.\n\nDit project hielp mij mijn vaardigheden in VR-ontwikkeling, physics simulatie en enemy AI te verbeteren.",
       "thumbnail": "./public/SFD/TumbnailSFD.webp",
@@ -38,30 +41,39 @@
     {
       "id": "medieval mimicry",
       "title": "Medieval Mimicry",
-      "tagline": "Een VR escape room met physics puzzels en interacties.",
-      "description": "Deze XR escape room is ontwikkeld met Unity's XR Interaction Toolkit en plaatst spelers in een mysterieuze kamer vol interactieve puzzels. Elke puzzel kan op meerdere manieren opgelost worden, wat spelers de vrijheid geeft om creatief te denken.\n\nIk wilde onderzoeken hoe je natuurlijke interacties kunt bouwen met VR controllers waarbij physics-based interactions zorgen voor maximale immersion.\n\nHet project richtte zich op drie kernpijlers: natuurlijke object manipulatie, physics-based puzzels en environmental storytelling waarbij de ruimte zelf het verhaal vertelt.",
-      "thumbnail": "https://picsum.photos/seed/xr/1200/600",
-      "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "logo": {
+        "src": "./public/MM/Logo_MM.webp",
+        "className": "w-32 h-32 rounded-md"
+      },
+      "tagline": "Een VR + MoCap game gebaseerd op poseren",
+      "description": "Stap in een unieke VR-ervaring waarin je eigen lichaam de controller is. Met behulp van de Rokoko Smartsuit Pro 2 worden je bewegingen in real-time vastgelegd en vertaald naar de gamewereld. In deze Unity-game word je uitgedaagd om fysieke poses van middeleeuwse personages nauwkeurig na te bootsen om verder te komen. \n\nDoor technologie en gameplay te combineren ontstaat een interactieve ervaring waarin timing, precisie en lichaamscontrole centraal staan. Deze game verkent de mogelijkheden van motion capture binnen VR en laat zien hoe fysieke interactie een nieuwe laag kan toevoegen aan immersieve gameplay.",
+      "thumbnail": "./public/MM/Thumbnail.webp",
+      "youtube": [
+        "https://youtube.com/embed/GgkLVMfTti4",
+        "https://youtube.com/embed/K7YQoazg_d0"
+      ],
+        
       "screenshots": [
-        "https://picsum.photos/seed/xr1/1200/800",
-        "https://picsum.photos/seed/xr2/1200/800",
-        "https://picsum.photos/seed/xr3/1200/800"
+        "./public/MM/Foto1.webp",
+        "./public/MM/Thumbnail.webp",
+        "./public/MM/Foto2.webp"
       ],
       "tags": [
         "Unity",
         "C#",
-        "XR",
+        "MoCap",
         "VR"
       ],
-      "projectRole": "XR Interaction Designer",
-      "timeline": "3 weken",
-      "year": "Jaar 4",
+      "projectRole": "XR Motion Capture Interaction Designer",
+      "timeline": "4 weken",
+      "Status": "Speelbaar",
+      "year": "Jaar 2, Kwartaal 1",
       "mechanics": [
         {
-          "subtitle": "Grab Interaction",
-          "description": "Objecten worden fysiek opgepakt door middel van XR Grab Interactables waarbij physics properties dynamisch worden aangepast. Voor kleine objecten gebruik ik precision grabs, terwijl grote objecten velocity-based grabs gebruiken die natuurlijker aanvoelen. De throw mechanic tracked controller velocity over meerdere frames voor realistische gooibewegingen.",
-          "image": "https://placehold.co/600x400?text=Grab",
-          "code": "public void OnSelectEntered(SelectEnterEventArgs args)\n{\n    grabbed = true;\n    rb.isKinematic = true;\n}\n\npublic void OnSelectExited(SelectExitEventArgs args)\n{\n    grabbed = false;\n    rb.isKinematic = false;\n}"
+          "subtitle": "MoCap player object forceren te blijven staan",
+          "description": "Dit script zorgt ervoor dat de speler (Rokoko body) volledig op zijn plek blijft staan door de positie en rotatie te 'locken' na calibratie. In LateUpdate wordt elke frame de oorspronkelijke positie en rotatie opnieuw toegepast, zodat externe invloeden van Rokoko tracking geen effect hebben op de root van het character. Dit script was het lastigste om te maken, omdat de Rokoko systemen zelf veel interne instellingen en overrides hebben die constant de transform proberen aan te passen.",
+          "image": "./public/MM/Rokoko.webp",
+          "code": "using UnityEngine;\n\npublic class RokokoAbsoluteRootLock : MonoBehaviour\n{\n    [Header(\"Root Lock Settings\")]\n    [SerializeField] private bool lockRotation = true;\n\n    private Vector3 lockedPosition;\n    private Quaternion lockedRotation;\n\n    void Start()\n    {\n        // Capture the position & rotation of the rig at calibration time\n        lockedPosition = transform.position;\n        lockedRotation = transform.rotation;\n    }\n\n    void LateUpdate()\n    {\n        // FORCE the rig to stay at the calibration spot\n        transform.position = lockedPosition;\n\n        // freeze world rotation so Rokoko cannot rotate the root\n        if (lockRotation)\n            transform.rotation = lockedRotation;\n    }\n\n    // Call this manually after calibration if needed\n    public void RecalibrateRoot()\n    {\n        lockedPosition = transform.position;\n        lockedRotation = transform.rotation;\n    }\n}\n"
         }
       ]
     },

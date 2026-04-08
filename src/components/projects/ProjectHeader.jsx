@@ -9,19 +9,26 @@ export default function ProjectHeader({ project }) {
         className="w-full h-48 sm:h-64 object-cover" 
       />
 
-      {/* Gradient */}
-      <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent" />
-
       {/* Overlay */}
       <div className="absolute bottom-4 left-4">
         
         {project.logo ? (
-          // als logo = logo + tagline
           <>
             <img 
-              src={project.logo} 
+              src={
+                typeof project.logo === "string"
+                  ? project.logo
+                  : project.logo.src
+              }
               alt={`${project.title} logo`}
-              className="h-20 md:h-20 object-contain drop-shadow-md mb-2"
+              className={`
+                ${
+                  typeof project.logo === "object" && project.logo.className
+                    ? project.logo.className
+                    : "h-20"
+                }
+                object-contain drop-shadow-md mb-2
+              `}
             />
 
             <p className="text-base text-gray-300 max-w-xl drop-shadow-sm font-medium">
@@ -29,7 +36,6 @@ export default function ProjectHeader({ project }) {
             </p>
           </>
         ) : (
-          // anders title + tagline
           <>
             <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-md mb-1">
               {project.title}
