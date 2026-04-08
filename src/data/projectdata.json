@@ -20,7 +20,8 @@
         "Unity",
         "C#",
         "3D",
-        "Physics"
+        "Physics",
+        "VR"
       ],
       "projectRole": "Gameplay Programmer",
       "timeline": "4 weken",
@@ -45,7 +46,7 @@
         "src": "./public/MM/Logo_MM.webp",
         "className": "w-32 h-32 rounded-md"
       },
-      "tagline": "Een VR + MoCap game gebaseerd op poseren",
+      "tagline": "Een VR + MoCap game runnend op Unity",
       "description": "Stap in een unieke VR-ervaring waarin je eigen lichaam de controller is. Met behulp van de Rokoko Smartsuit Pro 2 worden je bewegingen in real-time vastgelegd en vertaald naar de gamewereld. In deze Unity-game word je uitgedaagd om fysieke poses van middeleeuwse personages nauwkeurig na te bootsen om verder te komen. \n\nDoor technologie en gameplay te combineren ontstaat een interactieve ervaring waarin timing, precisie en lichaamscontrole centraal staan. Deze game verkent de mogelijkheden van motion capture binnen VR en laat zien hoe fysieke interactie een nieuwe laag kan toevoegen aan immersieve gameplay.",
       "thumbnail": "./public/MM/Thumbnail.webp",
       "youtube": [
@@ -80,7 +81,7 @@
     {
       "id": "installatie school",
       "title": "Fysieke Installatie",
-      "tagline": "Een snelle twin-stick shooter met vijandige AI.",
+      "tagline": "Een fysieke gezichten projectie installatie gebouwd in de school",
       "description": "Deze topdown shooter begon als een experiment om enemy AI te bouwen en groeide uit tot een complete arcade-style game. Het doel was om tight, responsive controls te combineren met challenging maar faire enemy behaviors.\n\nLater werd het uitgebreid met verschillende enemy types, wave progression systems en satisfying hit-feedback door screen shake en particle effects te combineren.\n\nHet project hielp mij de basis van AI state machines, navmesh pathfinding en difficulty balancing beter te leren begrijpen.",
       "thumbnail": "https://picsum.photos/seed/shooter/1200/600",
       "youtube": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
@@ -91,8 +92,7 @@
       "tags": [
         "Unity",
         "C#",
-        "AI",
-        "Topdown"
+        "Installatie"
       ],
       "projectRole": "Programmer",
       "timeline": "1 week",
@@ -115,7 +115,7 @@
     {
       "id": "vr-store",
       "title": "VR Store",
-      "tagline": "Een realistische VR-training voor industriële procedures.",
+      "tagline": "Een VR muziek winkel met interactions",
       
       "description": "Deze VR training simulator is gebouwd voor het oefenen van complexe industriële procedures in een volledig veilige virtuele omgeving. Het doel was om een training te creëren die net zo effectief is als hands-on training, maar zonder de risico's en kosten.\n\nDe focus lag op realistische hand-tracking voor natuurlijke interacties, stapsgewijze instructies die gebruikers begeleiden en gedetailleerde feedback op gebruikersacties waarbij immediate feedback het leerproces versterkt.\n\nHet project leerde mij hoe je effectieve VR training ervaringen ontwerpt met verschillende difficulty modes en performance tracking om daadwerkelijk kennisoverdracht te bevorderen.",
       "thumbnail": "https://picsum.photos/seed/vrtrain/1200/600",
@@ -129,7 +129,7 @@
         "Unity",
         "VR",
         "Hand Tracking",
-        "Training"
+        "Interaction"
       ],
       "projectRole": "VR Developer",
       "timeline": "4 weken",
@@ -152,9 +152,46 @@
       "itch": ""
     },
     {
-      "id": "ar-museum-guide",
-      "title": "AR Museum Guide",
-      "tagline": "Een interactieve AR-applicatie voor museum bezoekers.",
+      "id": "verdieping_software",
+      "title": "Verdieping Software projectjes (C++)",
+      "tagline": "Kleine C++ projecten om de nieuwe programmeer-taal te ontdekken",
+      "description": "De AR Museum Guide brengt museumtentoonstellingen tot leven door digitale content over fysieke objecten heen te projecteren en transformeert statische kunstwerken in interactieve verhalen. Een Romeins schilderij komt tot leven met animated characters, bij fossielen verschijnen 3D reconstructies.\n\nGebruikers kunnen hun telefoon op kunstwerken richten om extra informatie, 3D modellen en interactieve elementen te zien die historical context bieden op een engaging manier.\n\nDit project introduceerde mij in AR Foundation, image tracking en UI design voor augmented reality waarbij ik leerde werken met verschillende lighting conditions in musea.",
+      "thumbnail": "https://picsum.photos/seed/armuseum/1200/600",
+      "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "screenshots": [
+        "https://picsum.photos/seed/arm1/1200/800",
+        "https://picsum.photos/seed/arm2/1200/800"
+      ],
+      "tags": [
+        "C++",
+        "Project",
+        "EXE"
+      ],
+      "projectRole": "AR Developer",
+      "timeline": "3 weken",
+      "year": "Jaar 4",
+      "mechanics": [
+        {
+          "subtitle": "Image Tracking System",
+          "description": "Herkent kunstwerken en plaatst AR content op de juiste posities door gebruik te maken van AR Foundation's image tracking. Wanneer een artwork gedetecteerd wordt, spawned het systeem de bijbehorende content - info panels, 3D modellen of video overlays. De content blijft stabiel geanchored zelfs als de camera beweegt.",
+          "image": "https://placehold.co/600x400?text=Image+Tracking",
+          "code": "void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs args)\n{\n    foreach (var trackedImage in args.added)\n    {\n        string artworkId = trackedImage.referenceImage.name;\n        SpawnARContent(artworkId, trackedImage.transform);\n    }\n}"
+        },
+        {
+          "subtitle": "Interactive 3D Models",
+          "description": "Gebruikers kunnen 3D modellen roteren en schalen met intuïtive touch gestures - single finger drag roteert, pinch zoom schaalt en two-finger drag verplaatst het model. Sommige modellen zijn animated en kunnen hun functie demonstreren. Custom shaders zorgen dat de modellen natuurlijk blenden met de real world door environment lighting.",
+          "image": "https://placehold.co/600x400?text=3D+Interaction",
+          "code": "void HandleTouchInput()\n{\n    if (Input.touchCount == 2)\n    {\n        Touch t1 = Input.GetTouch(0);\n        Touch t2 = Input.GetTouch(1);\n\n        float pinchDist = Vector2.Distance(t1.position, t2.position);\n        float scale = pinchDist / initialPinchDist;\n\n        model.localScale = initialScale * scale;\n    }\n}"
+        }
+      ],
+      "git": "",
+      "itch": "https://fvugt.itch.io/ar-museum"
+    },
+
+        {
+      "id": "platformer",
+      "title": "Replay Platformer",
+      "tagline": "Een Unity multiplayer platformer game die draait op een Steamdeck en Windows met controller.",
       "description": "De AR Museum Guide brengt museumtentoonstellingen tot leven door digitale content over fysieke objecten heen te projecteren en transformeert statische kunstwerken in interactieve verhalen. Een Romeins schilderij komt tot leven met animated characters, bij fossielen verschijnen 3D reconstructies.\n\nGebruikers kunnen hun telefoon op kunstwerken richten om extra informatie, 3D modellen en interactieve elementen te zien die historical context bieden op een engaging manier.\n\nDit project introduceerde mij in AR Foundation, image tracking en UI design voor augmented reality waarbij ik leerde werken met verschillende lighting conditions in musea.",
       "thumbnail": "https://picsum.photos/seed/armuseum/1200/600",
       "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",
@@ -164,9 +201,9 @@
       ],
       "tags": [
         "Unity",
-        "AR Foundation",
-        "Mobile",
-        "Image Tracking"
+        "C#",
+        "Cross",
+        "Multiplayer"
       ],
       "projectRole": "AR Developer",
       "timeline": "3 weken",

@@ -4,7 +4,7 @@
       "id": "MMCR",
       "title": "MarinosMoCapReciever (MMCR)",
       "tagline": "Een klein test project voor het ontvangen van Motion Capture data via UDP.",
-      "description": "Dit project is opgezet om real-time Motion Capture data te ontvangen via UDP en deze data te gebruiken om een 3D model in Unity te animeren. Het systeem maakt gebruik van een eenvoudige UDP listener die data packets opvangt en decodeert naar bruikbare transform informatie voor verschillende lichaamsdelen.\n\nHet doel was om een basisframework te creëren dat later uitgebreid kan worden voor complexere Motion Capture toepassingen, zoals live performances of interactieve ervaringen.\n\nDit project hielp mij de basisprincipes van netwerkcommunicatie in Unity te begrijpen, evenals het werken met real-time data streams en het toepassen van deze data op 3D modellen.",
+      "description": "Dit project is opgezet om real-time Motion Capture data te ontvangen via UDP en deze data te gebruiken om een 3D model in Unity te animeren. Het systeem maakt gebruik van een eenvoudige UDP listener die data packets opvangt en decodeert naar bruikbare transform informatie voor verschillende lichaamsdelen.\n\nHet doel was om een basisframework te creëren dat later uitgebreid kan worden voor complexere Motion Capture toepassingen, zoals live performances of interactieve ervaringen.\n\nDit project hielp mij de basisprincipes van netwerkcommunicatie in Unity te begrijpen, evenals het werken met real-time data streams, het beoefenen van het bouwen van een C++ executable en het toepassen van deze data op 3D modellen.",
       "thumbnail": "https://picsum.photos/seed/asteroids/1200/600",
       "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",
       "screenshots": [
@@ -16,25 +16,17 @@
         "Software Application",
         "Data Streaming"
       ],
-      "projectRole": "Gameplay Programmer",
-      "timeline": "2 weken",
+      "projectRole": "Programmeur",
+      "timeline": "-",
+      "Status": "In Ontwikkeling",
       "mechanics": [
         {
           "subtitle": "Movement System",
           "description": "De speler gebruikt thrust-based movement en smooth rotation, net als klassieke arcade shooters. In plaats van directe positie updates werkt alles met physics forces, wat zorgt voor natuurlijk momentum en inertia. Ook implementeerde ik screen-wrap waarbij je aan de ene kant verdwijnt en aan de andere kant verschijnt.",
           "image": "https://picsum.photos/seed/e1/1200/800",
           "code": "void Update()\n{\n    if (Input.GetKey(KeyCode.W))\n        rb.AddForce(transform.up * thrust);\n\n    float rotate = Input.GetAxis(\"Horizontal\");\n    rb.MoveRotation(rb.rotation - rotate * rotateSpeed * Time.deltaTime);\n}"
-        },
-        {
-          "subtitle": "Asteroid Spawner",
-          "description": "Asteroïden spawnen in willekeurige groottes, rotaties en snelheid om elke wave uniek te maken. Het spawning systeem gebruikt een sphere-based approach waarbij asteroids altijd buiten het zichtveld verschijnen. Grote asteroids splitsen in kleinere stukken wanneer ze geraakt worden, wat voor dynamische gameplay zorgt.",
-          "image": "https://picsum.photos/seed/e2/1200/800",
-          "code": "void SpawnAsteroid()\n{\n    Vector3 pos = Random.onUnitSphere * spawnRadius;\n    float size = Random.Range(0.5f, 2.5f);\n\n    GameObject ast = Instantiate(asteroidPrefab, pos, Random.rotation);\n    ast.transform.localScale = Vector3.one * size;\n\n    Rigidbody rb = ast.GetComponent<Rigidbody>();\n    rb.AddForce(Random.onUnitSphere * Random.Range(5,15), ForceMode.Impulse);\n}"
         }
       ]
-      ,
-      "git": "https://github.com/fvugt/asteroids-3d",
-      "itch": "https://fvugt.itch.io/asteroids-3d"
     },
 
     {
@@ -42,7 +34,7 @@
       "title": "Portfolio Website",
       "tagline": "Een persoonlijke portfolio website om mijn projecten te tonen.",
       "description": "Dit project is opgezet om een persoonlijke portfolio website te bouwen waarin ik mijn projecten, skills en ervaringen kan tonen. De website is gebouwd met React en gebruikt Tailwind CSS voor styling. Het bevat een dynamische projectpagina die automatisch gegenereerd wordt op basis van JSON data.",
-      "thumbnail": "https://picsum.photos/seed/asteroids/1200/600",
+      "thumbnail": "./public/Logo.webp",
       "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",
       "screenshots": [
         "https://picsum.photos/seed/a1/1200/800",
@@ -71,9 +63,6 @@
           "code": "void SpawnAsteroid()\n{\n    Vector3 pos = Random.onUnitSphere * spawnRadius;\n    float size = Random.Range(0.5f, 2.5f);\n\n    GameObject ast = Instantiate(asteroidPrefab, pos, Random.rotation);\n    ast.transform.localScale = Vector3.one * size;\n\n    Rigidbody rb = ast.GetComponent<Rigidbody>();\n    rb.AddForce(Random.onUnitSphere * Random.Range(5,15), ForceMode.Impulse);\n}"
         }
       ]
-      ,
-      "git": "https://github.com/fvugt/asteroids-3d",
-      "itch": "https://fvugt.itch.io/asteroids-3d"
     },
 
     {
@@ -108,9 +97,6 @@
           "code": "void SpawnAsteroid()\n{\n    Vector3 pos = Random.onUnitSphere * spawnRadius;\n    float size = Random.Range(0.5f, 2.5f);\n\n    GameObject ast = Instantiate(asteroidPrefab, pos, Random.rotation);\n    ast.transform.localScale = Vector3.one * size;\n\n    Rigidbody rb = ast.GetComponent<Rigidbody>();\n    rb.AddForce(Random.onUnitSphere * Random.Range(5,15), ForceMode.Impulse);\n}"
         }
       ]
-      ,
-      "git": "https://github.com/fvugt/asteroids-3d",
-      "itch": "https://fvugt.itch.io/asteroids-3d"
     },
 
     {
@@ -145,12 +131,9 @@
           "code": "void SpawnAsteroid()\n{\n    Vector3 pos = Random.onUnitSphere * spawnRadius;\n    float size = Random.Range(0.5f, 2.5f);\n\n    GameObject ast = Instantiate(asteroidPrefab, pos, Random.rotation);\n    ast.transform.localScale = Vector3.one * size;\n\n    Rigidbody rb = ast.GetComponent<Rigidbody>();\n    rb.AddForce(Random.onUnitSphere * Random.Range(5,15), ForceMode.Impulse);\n}"
         }
       ]
-      ,
-      "git": "https://github.com/fvugt/asteroids-3d",
-      "itch": "https://fvugt.itch.io/asteroids-3d"
     },
 
-        {
+    {
       "id": "oasis",
       "title": "OASIS",
       "tagline": "Een interactief Maestro game",
@@ -182,9 +165,40 @@
           "code": "void SpawnAsteroid()\n{\n    Vector3 pos = Random.onUnitSphere * spawnRadius;\n    float size = Random.Range(0.5f, 2.5f);\n\n    GameObject ast = Instantiate(asteroidPrefab, pos, Random.rotation);\n    ast.transform.localScale = Vector3.one * size;\n\n    Rigidbody rb = ast.GetComponent<Rigidbody>();\n    rb.AddForce(Random.onUnitSphere * Random.Range(5,15), ForceMode.Impulse);\n}"
         }
       ]
-      ,
-      "git": "https://github.com/fvugt/asteroids-3d",
-      "itch": "https://fvugt.itch.io/asteroids-3d"
+    },
+
+     {
+      "id": "controlpanel",
+      "title": "ControlPanel",
+      "tagline": "Een fysiek control paneel die via een Adruino bestuurd kan worden.",
+      "description": "Dit project richt zich op het opzetten van een betrouwbare communicatiekanaal tussen een ESP32 microcontroller en een Android applicatie via Bluetooth Low Energy (BLE). Het doel is om data uit te wisselen tussen de twee apparaten, zodat de ESP32 gegevens kan verzenden naar de Android app.\n\nHet project omvatte het schrijven van firmware voor de ESP32 om BLE-berichten te verzenden en ontvangen, evenals het ontwikkelen van een eenvoudige Android app die verbinding maakt met de ESP32, gegevens kan lezen en opdrachten kan sturen. Dit project heeft mijn kennis van embedded systemen, draadloze communicatie en mobiele app-ontwikkeling versterkt.",
+      "thumbnail": "https://picsum.photos/seed/asteroids/1200/600",
+      "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "screenshots": [
+        "https://picsum.photos/seed/a1/1200/800",
+        "https://picsum.photos/seed/a2/1200/800"
+      ],
+      "tags": [
+        "C++",
+        "Software Application",
+        "Data Streaming"
+      ],
+      "projectRole": "Gameplay Programmer",
+      "timeline": "2 weken",
+      "mechanics": [
+        {
+          "subtitle": "Movement System",
+          "description": "De speler gebruikt thrust-based movement en smooth rotation, net als klassieke arcade shooters. In plaats van directe positie updates werkt alles met physics forces, wat zorgt voor natuurlijk momentum en inertia. Ook implementeerde ik screen-wrap waarbij je aan de ene kant verdwijnt en aan de andere kant verschijnt.",
+          "image": "https://picsum.photos/seed/e1/1200/800",
+          "code": "void Update()\n{\n    if (Input.GetKey(KeyCode.W))\n        rb.AddForce(transform.up * thrust);\n\n    float rotate = Input.GetAxis(\"Horizontal\");\n    rb.MoveRotation(rb.rotation - rotate * rotateSpeed * Time.deltaTime);\n}"
+        },
+        {
+          "subtitle": "Asteroid Spawner",
+          "description": "Asteroïden spawnen in willekeurige groottes, rotaties en snelheid om elke wave uniek te maken. Het spawning systeem gebruikt een sphere-based approach waarbij asteroids altijd buiten het zichtveld verschijnen. Grote asteroids splitsen in kleinere stukken wanneer ze geraakt worden, wat voor dynamische gameplay zorgt.",
+          "image": "https://picsum.photos/seed/e2/1200/800",
+          "code": "void SpawnAsteroid()\n{\n    Vector3 pos = Random.onUnitSphere * spawnRadius;\n    float size = Random.Range(0.5f, 2.5f);\n\n    GameObject ast = Instantiate(asteroidPrefab, pos, Random.rotation);\n    ast.transform.localScale = Vector3.one * size;\n\n    Rigidbody rb = ast.GetComponent<Rigidbody>();\n    rb.AddForce(Random.onUnitSphere * Random.Range(5,15), ForceMode.Impulse);\n}"
+        }
+      ]
     }
   ]
 }

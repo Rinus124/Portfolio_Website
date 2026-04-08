@@ -55,10 +55,12 @@ export default function ProjectCard({ project }) {
         </p>
 
         {/* Tags */}
-        <div className="flex flex-wrap gap-2 mt-3">
+        <div className="flex flex-wrap justify-center gap-4 mt-6">
           {project.tags.slice(0, 3).map((tag) => (
-            <span key={tag} className="tag">
-              <IconChooser tag={tag} />
+            <span
+              key={tag}
+              className="tag px-4 py-2 bg-(--surface-alt) rounded-lg text-sm font-medium border border-(--bordercolor) hover:bg-(--accent) hover:text-white transition-all"
+            >
               {tag}
             </span>
           ))}
