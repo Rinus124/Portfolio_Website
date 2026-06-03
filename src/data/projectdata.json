@@ -43,21 +43,21 @@
       "id": "medieval mimicry",
       "title": "Medieval Mimicry",
       "logo": {
-        "src": "./src/Pics/MM/Logo_MM.webp",
+        "src": "/portfolio//Pics/MM/Logo_MM.webp",
         "className": "w-32 h-32 rounded-md"
       },
       "tagline": "Een VR + MoCap game runnend op Unity",
       "description": "Stap in een unieke VR-ervaring waarin je eigen lichaam de controller is. Met behulp van de Rokoko Smartsuit Pro 2 worden je bewegingen in real-time vastgelegd en vertaald naar de gamewereld. In deze Unity-game word je uitgedaagd om fysieke poses van middeleeuwse personages nauwkeurig na te bootsen om verder te komen. \n\nDoor technologie en gameplay te combineren ontstaat een interactieve ervaring waarin timing, precisie en lichaamscontrole centraal staan. Deze game verkent de mogelijkheden van motion capture binnen VR en laat zien hoe fysieke interactie een nieuwe laag kan toevoegen aan immersieve gameplay.",
-      "thumbnail": "./src/Pics/MM/Thumbnail.webp",
+      "thumbnail": "/portfolio/Pics/MM/Thumbnail.webp",
       "youtube": [
         "https://youtube.com/embed/GgkLVMfTti4",
         "https://youtube.com/embed/K7YQoazg_d0"
       ],
         
       "screenshots": [
-        "./src/Pics/MM/Foto1.webp",
-        "./src/Pics/MM/Thumbnail.webp",
-        "./src/Pics/MM/Foto2.webp"
+        "/portfolio/Pics/MM/Foto1.webp",
+        "/portfolio/Pics/MM/Thumbnail.webp",
+        "/portfolio/Pics/MM/Foto2.webp"
       ],
       "tags": [
         "Unity",
@@ -73,7 +73,7 @@
         {
           "subtitle": "MoCap player object forceren te blijven staan",
           "description": "Dit script zorgt ervoor dat de speler (Rokoko body) volledig op zijn plek blijft staan door de positie en rotatie te 'locken' na calibratie. In LateUpdate wordt elke frame de oorspronkelijke positie en rotatie opnieuw toegepast, zodat externe invloeden van Rokoko tracking geen effect hebben op de root van het character. Dit script was het lastigste om te maken, omdat de Rokoko systemen zelf veel interne instellingen en overrides hebben die constant de transform proberen aan te passen.",
-          "image": "./src/Pics/MM/Rokoko.webp",
+          "image": "/portfolio/Pics/MM/Rokoko.webp",
           "code": "using UnityEngine;\n\npublic class RokokoAbsoluteRootLock : MonoBehaviour\n{\n    [Header(\"Root Lock Settings\")]\n    [SerializeField] private bool lockRotation = true;\n\n    private Vector3 lockedPosition;\n    private Quaternion lockedRotation;\n\n    void Start()\n    {\n        // Capture the position & rotation of the rig at calibration time\n        lockedPosition = transform.position;\n        lockedRotation = transform.rotation;\n    }\n\n    void LateUpdate()\n    {\n        // FORCE the rig to stay at the calibration spot\n        transform.position = lockedPosition;\n\n        // freeze world rotation so Rokoko cannot rotate the root\n        if (lockRotation)\n            transform.rotation = lockedRotation;\n    }\n\n    // Call this manually after calibration if needed\n    public void RecalibrateRoot()\n    {\n        lockedPosition = transform.position;\n        lockedRotation = transform.rotation;\n    }\n}\n"
         }
       ]

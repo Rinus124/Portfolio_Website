@@ -5,7 +5,7 @@
       "title": "MarinosMoCapReciever (MMCR)",
       "tagline": "Een klein test project voor het ontvangen van Motion Capture data via UDP.",
       "description": "Dit project is opgezet om real-time Motion Capture data te ontvangen via UDP en deze data te gebruiken om een 3D model in Unity te animeren. Het systeem maakt gebruik van een eenvoudige UDP listener die data packets opvangt en decodeert naar bruikbare transform informatie voor verschillende lichaamsdelen.\n\nHet doel was om een basisframework te creëren dat later uitgebreid kan worden voor complexere Motion Capture toepassingen, zoals live performances of interactieve ervaringen.\n\nDit project hielp mij de basisprincipes van netwerkcommunicatie in Unity te begrijpen, evenals het werken met real-time data streams, het beoefenen van het bouwen van een C++ executable en het toepassen van deze data op 3D modellen.",
-      "thumbnail": "./src/Pics/MMCR/foto1_MMCR.webp",
+      "thumbnail": "/portfolio//Pics/MMCR/foto1_MMCR.webp",
       "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",
       "screenshots": [
         "https://picsum.photos/seed/a1/1200/800",
@@ -34,7 +34,7 @@
       "title": "Portfolio Website",
       "tagline": "Een persoonlijke portfolio website om mijn projecten te tonen.",
       "description": "Dit project is opgezet om een persoonlijke portfolio website te bouwen waarin ik mijn projecten, skills en ervaringen kan tonen. De website is gebouwd met React en gebruikt Tailwind CSS voor styling. Het bevat een dynamische projectpagina die automatisch gegenereerd wordt op basis van JSON data.",
-      "thumbnail": "./src/Pics/Logo.webp",
+      "thumbnail": "/portfolio/Pics/Logo.webp",
       "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",
       "screenshots": [
         "https://picsum.photos/seed/a1/1200/800",
