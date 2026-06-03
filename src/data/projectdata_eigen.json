@@ -6,7 +6,7 @@
       "tagline": "Een klein test project voor het ontvangen van Motion Capture data via UDP.",
       "description": "Dit project is opgezet om real-time Motion Capture data te ontvangen via UDP en deze data te gebruiken om een 3D model in Unity te animeren. Het systeem maakt gebruik van een eenvoudige UDP listener die data packets opvangt en decodeert naar bruikbare transform informatie voor verschillende lichaamsdelen.\n\nHet doel was om een basisframework te creëren dat later uitgebreid kan worden voor complexere Motion Capture toepassingen, zoals live performances of interactieve ervaringen.\n\nDit project hielp mij de basisprincipes van netwerkcommunicatie in Unity te begrijpen, evenals het werken met real-time data streams, het beoefenen van het bouwen van een C++ executable en het toepassen van deze data op 3D modellen.",
       "thumbnail": "/portfolio//Pics/MMCR/foto1_MMCR.webp",
-      "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "youtube": "",
       "screenshots": [
         "https://picsum.photos/seed/a1/1200/800",
         "https://picsum.photos/seed/a2/1200/800"
@@ -170,7 +170,7 @@
      {
       "id": "controlpanel",
       "title": "ControlPanel",
-      "tagline": "Een fysiek control paneel die via een Adruino bestuurd kan worden.",
+      "tagline": "Een fysiek control paneel die via een Adruino bestuurd kan worden. En output weergeeft in Unity.",
       "description": "Dit project richt zich op het opzetten van een betrouwbare communicatiekanaal tussen een ESP32 microcontroller en een Android applicatie via Bluetooth Low Energy (BLE). Het doel is om data uit te wisselen tussen de twee apparaten, zodat de ESP32 gegevens kan verzenden naar de Android app.\n\nHet project omvatte het schrijven van firmware voor de ESP32 om BLE-berichten te verzenden en ontvangen, evenals het ontwikkelen van een eenvoudige Android app die verbinding maakt met de ESP32, gegevens kan lezen en opdrachten kan sturen. Dit project heeft mijn kennis van embedded systemen, draadloze communicatie en mobiele app-ontwikkeling versterkt.",
       "thumbnail": "https://picsum.photos/seed/asteroids/1200/600",
       "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",

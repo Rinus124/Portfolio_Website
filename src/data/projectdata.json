@@ -46,7 +46,7 @@
         "src": "/portfolio//Pics/MM/Logo_MM.webp",
         "className": "w-32 h-32 rounded-md"
       },
-      "tagline": "Een VR + MoCap game runnend op Unity",
+      "tagline": "Een VR + MoCap game runnend LIVE op Unity",
       "description": "Stap in een unieke VR-ervaring waarin je eigen lichaam de controller is. Met behulp van de Rokoko Smartsuit Pro 2 worden je bewegingen in real-time vastgelegd en vertaald naar de gamewereld. In deze Unity-game word je uitgedaagd om fysieke poses van middeleeuwse personages nauwkeurig na te bootsen om verder te komen. \n\nDoor technologie en gameplay te combineren ontstaat een interactieve ervaring waarin timing, precisie en lichaamscontrole centraal staan. Deze game verkent de mogelijkheden van motion capture binnen VR en laat zien hoe fysieke interactie een nieuwe laag kan toevoegen aan immersieve gameplay.",
       "thumbnail": "/portfolio/Pics/MM/Thumbnail.webp",
       "youtube": [
@@ -94,22 +94,11 @@
         "C#",
         "Installatie"
       ],
-      "projectRole": "Programmer",
-      "timeline": "1 week",
-      "year": "Jaar 4",
+      "projectRole": "Setup & Interaction builder",
+      "timeline": "6 weeks",
+      "year": "Jaar 2, Kwartaal 3",
+      "Status": "Niet Speelbaar",
       "mechanics": [
-        {
-          "subtitle": "Enemy AI State Machine",
-          "description": "Een finite state machine voor vijanden die dynamisch schakelt tussen Idle → Chase → Attack → Retreat states. In Chase gebruiken enemies navmesh pathfinding, in Attack positioneren ze zich tactisch, en in Retreat trekken ze zich terug naar cover bij lage health. Verschillende enemy types hebben eigen parameters voor aggression range en attack patterns.",
-          "image": "https://placehold.co/600x400?text=Enemy+AI",
-          "code": "void Update()\n{\n    switch(state)\n    {\n        case Idle:\n            LookForPlayer();\n            break;\n\n        case Chase:\n            MoveTowardPlayer();\n            break;\n\n        case Attack:\n            TryShoot();\n            break;\n    }\n}"
-        },
-        {
-          "subtitle": "Projectile System",
-          "description": "Hit-detection via raycasts met instant feedback - veel sneller en accurater dan physics-based projectiles. De raycast spawned een hit effect op het impact point en gebruikt layer masks om te bepalen wat geraakt kan worden. Elk schot krijgt een tracer effect die de bullet path visualiseert.",
-          "image": "https://placehold.co/600x400?text=Projectile",
-          "code": "void Shoot()\n{\n    Ray ray = new Ray(transform.position, transform.forward);\n\n    if (Physics.Raycast(ray, out var hit, 50f))\n    {\n        Debug.Log($\"Hit {hit.collider.name}\");\n    }\n}"
-        }
       ]
     },
     {
