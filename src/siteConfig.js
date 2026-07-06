@@ -7,7 +7,7 @@ export const siteConfig = {
   tagline: "Ik bouw interactieve XR-ervaringen met Unity en C#. Met grote passie voor animaties, klim ik in het Rokoko MoCap pak om leven in mijn creaties te blazen.",
   aboutImage: profilePic,
   TLTitle: "Bouw je eigen Animatie!",
-  cv: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+  cv: "portfolio/Media/CV_MvV.pdf",
 
   socials: {
     email: "marijn.v.veggel@gmail.com",
@@ -17,17 +17,10 @@ export const siteConfig = {
   },
 
   aboutLong: `
-    Ik ben een XR Developer die energie krijgt van het bouwen van interactieve, 
-    fysieke en intuïtieve ervaringen in VR en AR. Voor mij draait goede XR niet 
-    alleen om technologie, maar vooral om hoe gebruikers een digitale wereld 
-    *voelen*. Ik werk graag iteratief met prototypes: snel testen, verbeteren en 
-    opnieuw testen — net zo lang tot interacties natuurlijk en prettig aanvoelen.
-
-    Ik ga deze tekst aanpassen en een stuk persoonlijker maken door ook iets leuks
-    over mijzelf te vertellen!
+  Ik ben Marijn van Veggel, een gepassioneerde XR Software Developer met een sterke focus op het creëren van meeslepende ervaringen in de wereld van virtual en augmented reality. Met een achtergrond in Unity en C# combineer ik technische expertise met creatieve oplossingen om interactieve projecten tot leven te brengen. Mijn ervaring strekt zich uit over diverse domeinen, waaronder animatie, motion capture en embedded systems, waardoor ik in staat ben om innovatieve en boeiende XR-ervaringen te ontwikkelen. Ik ben altijd op zoek naar nieuwe uitdagingen en samenwerkingen die mijn vaardigheden verder kunnen versterken en mijn passie voor technologie en design kunnen voeden.
   `,
 
-  softSkills: ["Samenwerken met artists", "Feedback geven & ontvangen", "Probleemoplossend denken"],
+  softSkills: ["Samenwerking met designers", "Feedback geven & ontvangen + verwerken", "Probleemoplossend denken", "Creatief denken", "Communicatie & Presentatie"],
 
-  hardSkills: ["Unity & XR Interaction Toolkit", "C# Scripting", "Git & Version Control"],
+  hardSkills: ["Unity & XR Interaction Toolkit", "C# Scripting", "Git & Version Control", "Embedded Systems / Microcontrollers programming", "Rokoko MoCap & Animation"],
 };

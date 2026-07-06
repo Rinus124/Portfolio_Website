@@ -41,11 +41,10 @@ export default function About() {
               {/* CV Download */}
               <a
                 href={siteConfig.cv}
-                target="_blank"
-                rel="noopener noreferrer"
+                download="CV_MarijnvanVeggel.pdf"
                 className="w-full flex items-center justify-center gap-2 
-                           px-4 py-3 bg-(--accent) text-(--accent-text) rounded-lg 
-                           font-semibold hover:bg-(--accent-hover) transition-colors">
+                          px-4 py-3 bg-(--accent) text-(--accent-text) rounded-lg 
+                          font-semibold hover:bg-(--accent-hover) transition-colors mt-auto">
                 <Download className="w-5 h-5" />
                 Download CV
               </a>

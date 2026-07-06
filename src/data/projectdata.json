@@ -1,5 +1,43 @@
 {
   "projects": [
+      {
+      "id": "bumpyrush",
+      "title": "BumpyRush",
+      "logo": {
+        "src": "/portfolio/Pics/BR/Logo_BR.webp",
+        "className": "w-48 h-24 rounded-md"
+      },
+      "tagline": "Een multiplayer battle game met Botsauto's en physics-based controls.",
+      "description": "BumpyRush is een multiplayer battle game waarin spelers botsauto's besturen in een arena. Het doel is om Items te verzamelen voor de andere spelers je voor zijn door middel van strategische bewegingen en het gebruik van power-ups. De game maakt gebruik van physics-based controls, waardoor de voertuigen realistisch reageren op de omgeving en de acties van de speler.\n\nHet project bood mij de kans om mijn vaardigheden in Unity, C# en multiplayer networking te verbeteren, evenals het implementeren van complexe physics-interacties.",
+      "thumbnail": "/portfolio/Pics/BR/Picture1_BR.webp",
+      "youtube": "https://youtube.com/embed/zoEWhQ1zmWM",
+      "screenshots": [
+        "/portfolio/Pics/BR/Screenshot1_BR.webp",
+        "/portfolio/Pics/BR/Screenshot2_BR.webp",
+        "/portfolio/Pics/BR/Screenshot3_BR.webp"
+      ],
+      "tags": [
+        "Unity",
+        "C#",
+        "3D",
+        "Physics",
+        "Online Multiplayer"
+      ],
+      "projectRole": "Gameplay Programmer",
+      "timeline": "8 weken",
+      "Status": "Speelbaar (Wordt gereleased op Steam)",
+      "year": "Jaar 2, 4e Kwartaal",
+      "mechanics": [
+        {
+          "subtitle": "Bumpy Movement Script",
+          "description": "Ik heb de taak op mij genomen om het uiterste van de physics-based controls te halen door een script te schrijven dat de beweging van de botsauto's regelt. Dit script maakt gebruik van Unity's physics engine om realistische acceleratie, remmen en sturen te simuleren, waardoor de voertuigen op een natuurlijke manier reageren op input van de speler en interacties met de omgeving.",
+          "image": "/portfolio/Pics/BR/BumpyShot1.webp",
+          "code": "using UnityEngine;\nusing UnityEngine.InputSystem;\n\n/// <summary>\n/// Dit script regelt de beweging van de speler, inclusief acceleratie, remmen, sturen, driften en springen.\n/// Volledig gebaseerd op physics, met een focus op een arcade-achtige rijervaring.\n/// </summary>\npublic class Movement : MonoBehaviour\n{\n    [Header(\"Movement\")]\n    [SerializeField] private float speed = 20f;\n    [SerializeField] private float maxSpeed = 20f;\n    [SerializeField] private float jumpForce = 5f;\n    [SerializeField] private float throttleResponse = 5f;\n\n    [Header(\"Steering\")]\n    [SerializeField] private float turnSpeed = 120f;\n\n    [Header(\"Drift\")]\n    [SerializeField] private float driftFactor = 0.98f;\n    [SerializeField] private float extraDriftFactor = 0.995f;\n    [SerializeField] private float velocityRotateSpeed = 2f;\n    [SerializeField] private float extraDriftVelocityRotateSpeed = 0.5f;\n\n    [SerializeField] private float bounceDriftFactor = 0.996f;\n\n    [Header(\"Ground Check\")]\n    [SerializeField] private Grounded grounded;\n\n    [Header(\"StopMovements\")]\n    [SerializeField] private BounceFeatures stopMovement_Bounce;\n\n    [Header(\"Effects\")]\n    [SerializeField] private Transform JumpEffectPoint;\n\n    private Rigidbody rb3D;\n    private PlayerSFX playerSFX;\n    private PlayerEffects playerVFX;\n\n    private float driveInput;\n    private float steer;\n    private float smoothedThrottle;\n    private bool isExtraDrifting;\n\n    private void Awake()\n    {\n        rb3D = GetComponent<Rigidbody>();\n        playerSFX = GetComponent<PlayerSFX>();\n        playerVFX = GetComponent<PlayerEffects>();\n    }\n\n    // Vangt de input op voor gas geven (1) en achteruitrijden/remmen (-1)\n    public void OnDrive(InputAction.CallbackContext context)\n    {\n        driveInput = Mathf.Clamp(context.ReadValue<float>(), -1f, 1f);\n    }\n\n    // Vangt de input op voor sturen (links = -1, rechts = 1)\n    public void OnSteer(InputAction.CallbackContext context)\n    {\n        steer = context.ReadValue<float>();\n    }\n\n    // vangst input van drift knop\n    public void OnDrift(InputAction.CallbackContext context)\n    {\n        if (context.performed)\n        {\n            isExtraDrifting = true;\n        }\n        else if (context.canceled)\n        {\n            isExtraDrifting = false;\n        }\n    }\n\n    // FixedUpdate \n    private void FixedUpdate()\n    {\n        // Zorgt voor het geleidelijk optrekken en afremmen van de input (geen instant 0 naar 100)\n        smoothedThrottle = Mathf.Lerp(\n            smoothedThrottle,\n            driveInput,\n            throttleResponse * Time.fixedDeltaTime\n        );\n\n        HandleMovement();\n        HandleSteering();\n        ApplyDrift();\n    }\n\n    // MOVEMENT (Vooruit/achteruit)\n    private void HandleMovement()\n    {\n        // Stop de code direct als de auto in de lucht hangt of net ergens tegenaan is geBOBed :)\n        if (!grounded.isGrounded) return;\n\n        float currentThrottle = smoothedThrottle;\n\n        // Berekent hoe snel de auto momenteel vooruit (of achteruit) rijdt\n        float forwardSpeed = Vector3.Dot(rb3D.linearVelocity, transform.forward);\n\n        // Kracht toepassen op basis van de gas-input\n        if (Mathf.Abs(currentThrottle) > 0.01f)\n        {\n            // Snelheidslimiet controleren voor achteruitrijden\n            if (currentThrottle < 0f && forwardSpeed <= -maxSpeed * 0.5f)\n            {\n                return;\n            }\n            else\n            {\n                // Achteruitrijden gaat langzamer dan vooruitrijden\n                float reverseMultiplier = (currentThrottle < 0f) ? 0.3f : 1.0f;\n                rb3D.AddForce(transform.forward * currentThrottle * speed * reverseMultiplier, ForceMode.Acceleration);\n            }\n        }\n\n        if (stopMovement_Bounce != null && !stopMovement_Bounce.hasCollided)\n        {\n            Vector3 localVelocity = transform.InverseTransformDirection(rb3D.linearVelocity);\n            localVelocity.z = Mathf.Clamp(localVelocity.z, -maxSpeed * 0.5f, maxSpeed * 0.5f);\n            rb3D.linearVelocity = transform.TransformDirection(localVelocity);\n        }\n    }\n\n    // STUREN\n    private void HandleSteering()\n    {\n        // Berekent hoe snel de auto rijdt t.o.v. de topsnelheid (sturen werkt alleen als je rijdt)\n        float speedFactor = rb3D.linearVelocity.magnitude / maxSpeed;\n\n        if (speedFactor > 0.05f)\n        {\n            // Controleert of we vooruit of achteruit rijden, zodat het sturen omdraait bij achteruitrijden\n            float forwardSpeed = Vector3.Dot(rb3D.linearVelocity, transform.forward);\n            float directionSign = (forwardSpeed >= 0f) ? 1f : -1f;\n\n            // Berekent de rotatiehoek op basis van input, draaisnelheid en hoe snel de auto gaat\n            float rotationAmount =\n                steer *\n                turnSpeed *\n                speedFactor *\n                directionSign *\n                Time.fixedDeltaTime;\n\n            // Roteert het model van de auto\n            rb3D.MoveRotation(\n                rb3D.rotation *\n                Quaternion.Euler(0f, rotationAmount, 0f)\n            );\n\n            // Roteert de *bewegingsrichting* (velocity) mee, zodat de auto niet alleen draait maar ook die kant op gaat\n            Vector3 rotatedVelocity =\n                Quaternion.Euler(0f, rotationAmount, 0f) *\n                rb3D.linearVelocity;\n\n            float currentVelocityRotateSpeed = velocityRotateSpeed;\n            \n            // Checkt of de extra driftknop actief is, anders valt hij terug op de bounce of standaard waarde\n            if (isExtraDrifting)\n            {\n                currentVelocityRotateSpeed = extraDriftVelocityRotateSpeed;\n            }\n            else if (stopMovement_Bounce != null && stopMovement_Bounce.hasCollided)\n            {\n                // Verlaag de grip-rotatie\n                currentVelocityRotateSpeed = velocityRotateSpeed * 0.25f;\n            }\n\n            // Zorgt voor een soepele overgang tussen de oude richting en de nieuwe rijrichting\n            rb3D.linearVelocity = Vector3.Lerp(\n                rb3D.linearVelocity,\n                rotatedVelocity,\n                currentVelocityRotateSpeed * Time.fixedDeltaTime\n            );\n        }\n    }\n\n    // DRIFTEN (Zwaartekracht/Grip-simulatie)\n    private void ApplyDrift()\n    {\n        // Haalt de lokale snelheid op\n        Vector3 localVelocity = transform.InverseTransformDirection(rb3D.linearVelocity);\n\n        float currentDriftFactor = driftFactor;\n        \n        if (isExtraDrifting)\n        {\n            currentDriftFactor = extraDriftFactor;\n            playerVFX.PlayEffect(PlayerEffects.EffectType.Drift, JumpEffectPoint);\n        }\n        else if (stopMovement_Bounce != null && stopMovement_Bounce.hasCollided)\n        {\n            currentDriftFactor = bounceDriftFactor;\n        }\n        \n        // Hoe lager de factor, hoe sneller de auto stopt met slippen en grip krijgt.\n        localVelocity.x *= currentDriftFactor;\n\n        // Past de aangepaste snelheid weer toe op de Rigidbody\n        rb3D.linearVelocity = transform.TransformDirection(localVelocity);\n    }\n\n    // SPRINGEN\n    public void OnJump(InputAction.CallbackContext context)\n    {\n        // checks om te voorkomen dat de spleler springt\n        if (!context.performed) return;\n        if (!grounded.isGrounded) return;\n\n        // geft een directe fysieke impuls omhoog (de jump zelf)\n        rb3D.AddForce(\n            Vector3.up * jumpForce,\n            ForceMode.Impulse\n        );\n        \n        // jump VFX (expects a Transform)\n        playerVFX.PlayEffect(PlayerEffects.EffectType.Jump, JumpEffectPoint);\n\n        // jump sfx\n        playerSFX.PlayJumpSound();\n    }\n}"        }
+      ]
+      ,
+      "git": "https://github.com/jensmonne/BumpyRush",
+      "itch": ""
+    },
     {
       "id": "vr-shooter",
       "title": "Syndrome: Fever Dream",
@@ -19,9 +57,9 @@
       "tags": [
         "Unity",
         "C#",
-        "3D",
+        "VR",
         "Physics",
-        "VR"
+        "3D"
       ],
       "projectRole": "Gameplay Programmer",
       "timeline": "4 weken",
@@ -79,12 +117,12 @@
       ]
     },
     {
-      "id": "installatie school",
-      "title": "Fysieke Installatie",
-      "tagline": "Een fysieke gezichten projectie installatie gebouwd in de school",
-      "description": "Deze topdown shooter begon als een experiment om enemy AI te bouwen en groeide uit tot een complete arcade-style game. Het doel was om tight, responsive controls te combineren met challenging maar faire enemy behaviors.\n\nLater werd het uitgebreid met verschillende enemy types, wave progression systems en satisfying hit-feedback door screen shake en particle effects te combineren.\n\nHet project hielp mij de basis van AI state machines, navmesh pathfinding en difficulty balancing beter te leren begrijpen.",
-      "thumbnail": "https://picsum.photos/seed/shooter/1200/600",
-      "youtube": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "id": "control-panel",
+      "title": "Control Panel",
+      "tagline": "Een fysiek control paneel die via een Adruino bestuurd kan worden. En output weergeeft in Unity.",
+      "description": "Dit is een Proof Of Concept (POC) project waarin ik een fysiek control panel heb gebouwd dat via een Arduino communiceert met Unity. Het paneel bevat knoppen, schakelaars en potentiometers die input leveren aan de game, terwijl LED's en displays output van de game weergeven. Dit project demonstreert hoe fysieke interfaces kunnen worden geïntegreerd in digitale omgevingen voor een meer interactieve ervaring.\n\nHet project heeft me geleerd hoe je seriële communicatie tussen hardware en software opzet, hoe je input van fysieke componenten verwerkt in Unity en hoe je visuele feedback terugstuurt naar het fysieke paneel.",
+      "thumbnail": "/portfolio/Pics/Konsole/Thumbnail_Konsole.webp",
+      "youtube": "https://youtube.com/embed/MiahxVcIpiw",
       "screenshots": [
         "https://picsum.photos/seed/shooter1/1200/800",
         "https://picsum.photos/seed/shooter2/1200/800"
@@ -92,13 +130,54 @@
       "tags": [
         "Unity",
         "C#",
-        "Installatie"
+        "Arduino",
+        "Serial Communication",
+        "C++"
       ],
       "projectRole": "Setup & Interaction builder",
-      "timeline": "6 weeks",
+      "timeline": "4 weken",
       "year": "Jaar 2, Kwartaal 3",
       "Status": "Niet Speelbaar",
       "mechanics": [
+        {
+          "subtitle": "Arduino C++ Script voor Seriële Communicatie",
+          "description": "Dit Arduino script leest de status van een knop en een potentiometer en stuurt deze gegevens via seriële communicatie naar Unity. Het script bevat ook logica voor het knipperen van LED's op basis van commando's die het ontvangt van Unity. Dit maakt het mogelijk om fysieke input te gebruiken in de game en visuele feedback terug te sturen naar het fysieke paneel.",
+          "image": "https://placehold.co/600x400?text=Hand+Tracking",
+          "code": "#include <LiquidCrystal.h>\n\n// ===== LCD pins (alleen 8–13 gebruikt) =====\nLiquidCrystal lcd(13,12,11,10,9,8);\n\n// ===== Inputs =====\nconst int buttonPin = A1;\nconst int potPin = A3;\n\n// ===== Outputs =====\nconst int greenLedBPin = 5;\nconst int redLedBPin  = 6;\nconst int buzzerPin  = 7;\n\n// RGB LEDs\nconst int BluePin = 2;\nconst int GreenPin = 3;\nconst int RedPin = 4;\n\n// Button state\nbool lastButtonState = HIGH;\nbool buttonPressed = false;\n\n// LED states\nbool blinkBlue = false;\nbool blinkRed  = false;\nbool GreenOn = false;\n\nbool buttonLEDg = false;\nbool buttonLEDr = false;\n\nbool ledState  = false;\nunsigned long lastBlinkTime = 0;\n\nunsigned long lastDebounceTime = 0;\nconst unsigned long debounceDelay = 50;\nbool lastReading = HIGH;\nbool buttonState = HIGH;\n\nvoid setup()\n{\n  pinMode(buttonPin, INPUT_PULLUP);\n  pinMode(greenLedBPin, OUTPUT);\n  pinMode(redLedBPin, OUTPUT);\n  pinMode(buzzerPin, OUTPUT);\n  pinMode(RedPin, OUTPUT);\n  pinMode(BluePin, OUTPUT);\n  pinMode(GreenPin, OUTPUT);\n\n  lcd.begin(20,4);\n\n  Serial.begin(9600);\n}\n\nvoid loop()\n{\n  // ======================\n  // Input → Unity\n  // ======================\n  bool currentState = digitalRead(buttonPin);\n\n  //button state\n  bool reading = digitalRead(buttonPin);\n\n  if (reading != lastReading)\n  {\n    lastDebounceTime = millis();\n  }\n\n  if ((millis() - lastDebounceTime) > debounceDelay)\n  {\n    if (reading != buttonState)\n    {\n      buttonState = reading;\n\n      if (buttonState == LOW)\n      {\n        buttonPressed = !buttonPressed;\n      }\n    }\n  }\n\n  lastReading = reading;\n\n  int potValue = analogRead(potPin);\n\n  Serial.print(buttonPressed ? 1 : 0);\n  Serial.print(\",\");\n  Serial.println(potValue);\n\n  // ======================\n  // Unity → Output\n  // ======================\n  if (Serial.available())\n  {\n    String cmd = Serial.readStringUntil('\\n');\n    cmd.trim();\n\n    if (cmd == \"BLINK_BLUE\") blinkBlue = true;\n    if (cmd == \"STOP_BLUE\")  blinkBlue = false;\n\n    if (cmd == \"BLINK_RED\")  blinkRed = true;\n    if (cmd == \"STOP_RED\")   blinkRed = false;\n\n    if (cmd == \"GREEN_ON\")   GreenOn = true;\n    if (cmd == \"GREEN_OFF\")  GreenOn = false;\n\n    if (cmd == \"BUTTON_RED_ON\") buttonLEDr = true;\n    if (cmd == \"BUTTON_RED_OFF\") buttonLEDr = false;\n\n    if (cmd == \"BUTTON_GREEN_ON\") buttonLEDg = true;\n    if (cmd == \"BUTTON_GREEN_OFF\") buttonLEDg = false;\n\n    if (cmd == \"ALL_OFF\")\n    {\n      blinkBlue = false;\n      blinkRed = false;\n      GreenOn = false;\n      buttonLEDg = false;\n      buttonLEDr = false;\n\n      // Immediately force outputs off\n      digitalWrite(BluePin, LOW);\n      digitalWrite(RedPin, LOW);\n      digitalWrite(GreenPin, LOW);\n      digitalWrite(greenLedBPin, LOW);\n      digitalWrite(redLedBPin, LOW);\n      noTone(buzzerPin);\n    }\n  }\n\n  // ======================\n  // Button LEDs\n  // ======================\n  if (buttonLEDg)\n  {\n    digitalWrite(greenLedBPin, HIGH);\n    digitalWrite(redLedBPin, LOW);\n  }\n  else if (buttonLEDr)\n  {\n    digitalWrite(redLedBPin, HIGH);\n    digitalWrite(greenLedBPin, LOW);\n  }\n  else\n  {\n    digitalWrite(greenLedBPin, LOW);\n    digitalWrite(redLedBPin, LOW);\n  }\n\n  // ======================\n  // Blink logic\n  // ======================\n  if (millis() - lastBlinkTime > 300)\n  {\n    lastBlinkTime = millis();\n    ledState = !ledState;\n\n    digitalWrite(BluePin,  blinkBlue ? ledState : LOW);\n    digitalWrite(RedPin,   blinkRed  ? ledState : LOW);\n    digitalWrite(GreenPin, GreenOn && !blinkBlue && !blinkRed ? HIGH : LOW);\n\n    // buzzer sync\n    if (blinkBlue || blinkRed)\n    {\n      if (ledState) tone(buzzerPin,1000);\n      else noTone(buzzerPin);\n    }\n    else\n      noTone(buzzerPin);\n\n    // LCD Status\n    lcd.clear();\n\n    lcd.setCursor(0,0);\n    lcd.print(\"CORE STATUS:\");\n\n    if (blinkRed) \n    {\n      lcd.setCursor(4,1);\n      lcd.print(\"!!!ERROR!!!\");\n      lcd.setCursor(2,3);\n      lcd.print(\"CORE OVERHEATED!\");\n    }\n    else if (blinkBlue)\n    {\n      lcd.setCursor(4,1);\n      lcd.print(\"!!!ERROR!!!\");\n      lcd.setCursor(1,3);\n      lcd.print(\"CORE UNDERCOOLED!\");\n    }\n    else if (GreenOn)\n    {\n      lcd.setCursor(7,2);\n      lcd.print(\"Stable\");\n    }\n    else\n    {\n      lcd.setCursor(7,2);\n      lcd.print(\"Stable\");\n    }\n  }\n\n  delay(10);\n}"
+        }
+      ]
+    },
+        {
+      "id": "oasis",
+      "title": "OASIS",
+      "tagline": "Een interactief Maestro game",
+      "description": "Dit project richt zich op het opzetten van een betrouwbare communicatiekanaal tussen een ESP32 microcontroller en een Android applicatie via Bluetooth Low Energy (BLE). Het doel is om data uit te wisselen tussen de twee apparaten, zodat de ESP32 gegevens kan verzenden naar de Android app.\n\nHet project omvatte het schrijven van firmware voor de ESP32 om BLE-berichten te verzenden en ontvangen, evenals het ontwikkelen van een eenvoudige Android app die verbinding maakt met de ESP32, gegevens kan lezen en opdrachten kan sturen. Dit project heeft mijn kennis van embedded systemen, draadloze communicatie en mobiele app-ontwikkeling versterkt.",
+      "thumbnail": "https://picsum.photos/seed/asteroids/1200/600",
+      "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "screenshots": [
+        "https://picsum.photos/seed/a1/1200/800",
+        "https://picsum.photos/seed/a2/1200/800"
+      ],
+      "tags": [
+        "C++",
+        "Software Application",
+        "Data Streaming"
+      ],
+      "projectRole": "Gameplay Programmer",
+      "timeline": "2 weken",
+      "mechanics": [
+        {
+          "subtitle": "Movement System",
+          "description": "De speler gebruikt thrust-based movement en smooth rotation, net als klassieke arcade shooters. In plaats van directe positie updates werkt alles met physics forces, wat zorgt voor natuurlijk momentum en inertia. Ook implementeerde ik screen-wrap waarbij je aan de ene kant verdwijnt en aan de andere kant verschijnt.",
+          "image": "https://picsum.photos/seed/e1/1200/800",
+          "code": "void Update()\n{\n    if (Input.GetKey(KeyCode.W))\n        rb.AddForce(transform.up * thrust);\n\n    float rotate = Input.GetAxis(\"Horizontal\");\n    rb.MoveRotation(rb.rotation - rotate * rotateSpeed * Time.deltaTime);\n}"
+        },
+        {
+          "subtitle": "Asteroid Spawner",
+          "description": "Asteroïden spawnen in willekeurige groottes, rotaties en snelheid om elke wave uniek te maken. Het spawning systeem gebruikt een sphere-based approach waarbij asteroids altijd buiten het zichtveld verschijnen. Grote asteroids splitsen in kleinere stukken wanneer ze geraakt worden, wat voor dynamische gameplay zorgt.",
+          "image": "https://picsum.photos/seed/e2/1200/800",
+          "code": "void SpawnAsteroid()\n{\n    Vector3 pos = Random.onUnitSphere * spawnRadius;\n    float size = Random.Range(0.5f, 2.5f);\n\n    GameObject ast = Instantiate(asteroidPrefab, pos, Random.rotation);\n    ast.transform.localScale = Vector3.one * size;\n\n    Rigidbody rb = ast.GetComponent<Rigidbody>();\n    rb.AddForce(Random.onUnitSphere * Random.Range(5,15), ForceMode.Impulse);\n}"
+        }
       ]
     },
     {
@@ -141,43 +220,6 @@
       "itch": ""
     },
     {
-      "id": "verdieping_software",
-      "title": "Verdieping Software projectjes (C++)",
-      "tagline": "Kleine C++ projecten om de nieuwe programmeer-taal te ontdekken",
-      "description": "De AR Museum Guide brengt museumtentoonstellingen tot leven door digitale content over fysieke objecten heen te projecteren en transformeert statische kunstwerken in interactieve verhalen. Een Romeins schilderij komt tot leven met animated characters, bij fossielen verschijnen 3D reconstructies.\n\nGebruikers kunnen hun telefoon op kunstwerken richten om extra informatie, 3D modellen en interactieve elementen te zien die historical context bieden op een engaging manier.\n\nDit project introduceerde mij in AR Foundation, image tracking en UI design voor augmented reality waarbij ik leerde werken met verschillende lighting conditions in musea.",
-      "thumbnail": "https://picsum.photos/seed/armuseum/1200/600",
-      "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",
-      "screenshots": [
-        "https://picsum.photos/seed/arm1/1200/800",
-        "https://picsum.photos/seed/arm2/1200/800"
-      ],
-      "tags": [
-        "C++",
-        "Project",
-        "EXE"
-      ],
-      "projectRole": "AR Developer",
-      "timeline": "3 weken",
-      "year": "Jaar 4",
-      "mechanics": [
-        {
-          "subtitle": "Image Tracking System",
-          "description": "Herkent kunstwerken en plaatst AR content op de juiste posities door gebruik te maken van AR Foundation's image tracking. Wanneer een artwork gedetecteerd wordt, spawned het systeem de bijbehorende content - info panels, 3D modellen of video overlays. De content blijft stabiel geanchored zelfs als de camera beweegt.",
-          "image": "https://placehold.co/600x400?text=Image+Tracking",
-          "code": "void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs args)\n{\n    foreach (var trackedImage in args.added)\n    {\n        string artworkId = trackedImage.referenceImage.name;\n        SpawnARContent(artworkId, trackedImage.transform);\n    }\n}"
-        },
-        {
-          "subtitle": "Interactive 3D Models",
-          "description": "Gebruikers kunnen 3D modellen roteren en schalen met intuïtive touch gestures - single finger drag roteert, pinch zoom schaalt en two-finger drag verplaatst het model. Sommige modellen zijn animated en kunnen hun functie demonstreren. Custom shaders zorgen dat de modellen natuurlijk blenden met de real world door environment lighting.",
-          "image": "https://placehold.co/600x400?text=3D+Interaction",
-          "code": "void HandleTouchInput()\n{\n    if (Input.touchCount == 2)\n    {\n        Touch t1 = Input.GetTouch(0);\n        Touch t2 = Input.GetTouch(1);\n\n        float pinchDist = Vector2.Distance(t1.position, t2.position);\n        float scale = pinchDist / initialPinchDist;\n\n        model.localScale = initialScale * scale;\n    }\n}"
-        }
-      ],
-      "git": "",
-      "itch": "https://fvugt.itch.io/ar-museum"
-    },
-
-        {
       "id": "platformer",
       "title": "Replay Platformer",
       "tagline": "Een Unity multiplayer platformer game die draait op een Steamdeck en Windows met controller.",
